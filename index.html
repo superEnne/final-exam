@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #c0392b;
+    --red-dark: #922b21;
+    --red-deep: #641e16;
+    --red-light: #e74c3c;
+    --red-pale: #fadbd8;
+    --red-muted: #f1948a;
+    --bg: #0d0504;
+    --bg2: #140807;
+    --bg3: #1e0c0a;
+    --surface: #1a0b09;
+    --surface2: #2d1210;
+    --border: #3d1a17;
+    --text: #f5ece9;
+    --text-muted: #b88a84;
+    --text-dim: #7a4f4a;
+    --correct: #27ae60;
+    --correct-bg: #071410;
+    --wrong: #c0392b;
+    --wrong-bg: #1a0806;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ─── HEADER ─── */
+  .topbar {
+    border-bottom: 1px solid var(--border);
+    padding: 22px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(13,5,4,0.95);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+  .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    color: var(--red-light);
+    letter-spacing: 0.02em;
+  }
+  .brand span {
+    color: var(--text-dim);
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    display: block;
+    margin-top: 1px;
+    font-weight: 300;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .ghost-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .ghost-btn:hover { border-color: var(--red); color: var(--text); }
+
+  /* ─── SUBJECT SELECTION ─── */
+  #screen-subjects {
+    padding: 0;
+  }
+  .subjects-hero {
+    padding: 72px 48px 48px;
+    max-width: 860px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--red); }
+  .subjects-hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .subjects-hero h1 em { color: var(--red-light); font-style: italic; }
+  .subjects-hero p { color: var(--text-muted); font-size: 0.82rem; font-weight: 300; }
+
+  .subjects-grid {
+    padding: 16px 48px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .subject-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px 24px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .subject-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(192,57,43,0.06) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .subject-card:hover { border-color: var(--red); transform: translateY(-2px); }
+  .subject-card:hover::after { opacity: 1; }
+  .subject-card:active { transform: translateY(0); }
+
+  .sc-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+    border: 1px solid var(--red-deep);
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .sc-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .sc-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .sc-meta {
+    display: flex;
+    gap: 16px;
+  }
+  .sc-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .sc-meta-item .val { font-size: 1.1rem; color: var(--red-light); font-weight: 500; }
+  .sc-meta-item .lbl { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+
+  .sc-arrow {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    transition: color 0.15s, transform 0.15s;
+  }
+  .subject-card:hover .sc-arrow { color: var(--red-light); transform: translate(2px, -2px); }
+
+  /* ─── CONFIG SCREEN ─── */
+  #screen-config { justify-content: flex-start; }
+  .config-body {
+    padding: 60px 48px;
+    max-width: 600px;
+    animation: fadeUp 0.5s ease both;
+    flex: 1;
+  }
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 36px;
+    transition: color 0.15s;
+    padding: 0;
+  }
+  .back-link:hover { color: var(--red-light); }
+  .config-body h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 6px;
+  }
+  .config-body h2 em { color: var(--red-light); font-style: italic; }
+  .config-sub { color: var(--text-muted); font-size: 0.78rem; font-weight: 300; margin-bottom: 40px; }
+
+  .config-option {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 20px;
+    background: var(--surface);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .config-option:hover { border-color: var(--red-dark); }
+  .config-option.active { border-color: var(--red); }
+  .config-opt-info {}
+  .config-opt-title { font-size: 0.85rem; color: var(--text); margin-bottom: 3px; }
+  .config-opt-desc { font-size: 0.7rem; color: var(--text-dim); font-weight: 300; }
+
+  /* Toggle */
+  .toggle {
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .toggle.on { background: var(--red-deep); border-color: var(--red); }
+  .toggle.on::after { transform: translateX(18px); background: var(--red-light); }
+
+  .start-btn {
+    margin-top: 32px;
+    width: 100%;
+    padding: 16px;
+    background: var(--red-dark);
+    color: var(--text);
+    border: none;
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .start-btn:hover { background: var(--red); transform: translateY(-1px); }
+  .start-btn:active { transform: translateY(0); }
+
+  /* ─── QUIZ SCREEN ─── */
+  #screen-quiz { justify-content: flex-start; }
+
+  /* Progress bar */
+  .quiz-progress {
+    padding: 0 48px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .qp-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    gap: 20px;
+  }
+  .qp-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); white-space: nowrap; }
+  .qp-track { flex: 1; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .qp-fill { height: 100%; background: linear-gradient(90deg, var(--red-dark), var(--red-light)); border-radius: 2px; transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .qp-score { font-size: 0.75rem; color: var(--red-light); font-weight: 500; white-space: nowrap; }
+
+  /* Question area */
+  .quiz-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 48px 60px;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fadeUp 0.35s ease both;
+  }
+
+  .q-counter {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+  .q-counter span { color: var(--red); }
+
+  .q-section-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid var(--red-deep);
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+
+  .q-text {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--text);
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+
+  /* Table */
+  .q-table-wrap { overflow-x: auto; margin-bottom: 18px; }
+  .q-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; color: var(--text-muted); }
+  .q-table th { background: var(--surface2); color: var(--text-dim); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 10px; text-align: left; border: 1px solid var(--border); font-size: 0.62rem; }
+  .q-table td { padding: 6px 10px; border: 1px solid var(--border); font-weight: 300; }
+  .q-table tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
+
+  .q-fd { margin-bottom: 20px; }
+  .q-fd ul { list-style: none; background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
+  .q-fd li { font-size: 0.72rem; color: var(--text-muted); font-weight: 300; }
+
+  /* Options */
+  .opts-grid { display: flex; flex-direction: column; gap: 9px; margin-bottom: 28px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: var(--surface);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.55;
+    text-align: left;
+    width: 100%;
+    font-family: 'DM Mono', monospace;
+    position: relative;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--red); background: rgba(192,57,43,0.07); color: var(--text); }
+  .opt:hover:not(:disabled) .opt-letter { border-color: var(--red); color: var(--red-light); }
+  .opt-letter {
+    min-width: 26px;
+    height: 26px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 500;
+    flex-shrink: 0;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    margin-top: 1px;
+  }
+  .opt:disabled { cursor: default; }
+
+  .opt.correct-ans {
+    border-color: var(--correct) !important;
+    background: rgba(39,174,96,0.09) !important;
+    color: #82e0aa !important;
+  }
+  .opt.correct-ans .opt-letter { border-color: var(--correct) !important; background: var(--correct); color: #fff !important; }
+
+  .opt.wrong-ans {
+    border-color: var(--wrong) !important;
+    background: rgba(192,57,43,0.09) !important;
+    color: var(--red-muted) !important;
+  }
+  .opt.wrong-ans .opt-letter { border-color: var(--wrong) !important; background: var(--wrong); color: #fff !important; }
+
+  .opt.reveal-ans {
+    border-color: rgba(39,174,96,0.4) !important;
+    color: rgba(130,224,170,0.6) !important;
+  }
+  .opt.reveal-ans .opt-letter { border-color: rgba(39,174,96,0.4) !important; color: rgba(39,174,96,0.6) !important; }
+
+  /* Feedback */
+  .q-feedback {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    margin-bottom: 28px;
+    animation: slideIn 0.2s ease both;
+  }
+  .q-feedback.correct { background: rgba(39,174,96,0.1); border: 1px solid var(--correct); color: #82e0aa; }
+  .q-feedback.wrong { background: rgba(192,57,43,0.1); border: 1px solid var(--wrong); color: var(--red-muted); }
+  .q-feedback .icon { font-size: 1rem; flex-shrink: 0; }
+
+  /* Nav */
+  .q-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .nav-btn {
+    padding: 12px 24px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-dim);
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--red); color: var(--text); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .nav-btn.primary {
+    background: var(--red-dark);
+    border-color: var(--red-dark);
+    color: var(--text);
+  }
+  .nav-btn.primary:hover:not(:disabled) { background: var(--red); border-color: var(--red); }
+
+  .q-dot-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex: 1;
+  }
+  .q-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    flex-shrink: 0;
+  }
+  .q-dot:hover { transform: scale(1.4); }
+  .q-dot.current { background: var(--text-dim); transform: scale(1.3); }
+  .q-dot.dot-correct { background: var(--correct); }
+  .q-dot.dot-wrong { background: var(--wrong); }
+
+  /* ─── SUMMARY SCREEN ─── */
+  #screen-summary { justify-content: flex-start; }
+  .summary-body {
+    padding: 60px 48px 80px;
+    max-width: 720px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .summary-body h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 6px; }
+  .summary-body h2 em { color: var(--red-light); font-style: italic; }
+  .summary-sub { color: var(--text-muted); font-size: 0.78rem; font-weight: 300; margin-bottom: 36px; }
+
+  .grade-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    padding: 28px;
+    background: rgba(192,57,43,0.05);
+    margin-bottom: 24px;
+  }
+  .grade-letter { font-family: 'DM Serif Display', serif; font-size: 4.5rem; color: var(--red-light); line-height: 1; }
+  .grade-info .g-title { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
+  .grade-info .g-desc { font-size: 0.75rem; color: var(--text-muted); font-weight: 300; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-box { border: 1px solid var(--border); padding: 20px 16px; border-radius: 3px; background: var(--surface); }
+  .stat-box .sval { font-size: 1.8rem; font-weight: 500; line-height: 1; margin-bottom: 4px; }
+  .stat-box .slbl { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+  .stat-box.s-neutral .sval { color: var(--red-light); }
+  .stat-box.s-good .sval { color: var(--correct); }
+  .stat-box.s-bad .sval { color: var(--wrong); }
+
+  .bloom-section { margin-bottom: 28px; }
+  .bloom-section h3 { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; }
+  .bloom-row { display: flex; align-items: center; gap: 12px; margin-bottom: 9px; }
+  .bloom-row .bl { width: 90px; font-size: 0.7rem; color: var(--text-muted); flex-shrink: 0; }
+  .bloom-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .bloom-fill { height: 100%; background: linear-gradient(90deg, var(--red-dark), var(--red-light)); border-radius: 2px; }
+  .bloom-row .bp { width: 36px; font-size: 0.68rem; color: var(--text-muted); text-align: right; flex-shrink: 0; }
+
+  .review-section { margin-bottom: 36px; }
+  .review-section h3 { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px 16px;
+    margin-bottom: 9px;
+    background: var(--surface);
+  }
+  .review-item .ri-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ri-num { font-size: 0.62rem; color: var(--text-dim); }
+  .ri-tags { display: flex; gap: 6px; }
+  .ri-tag { font-size: 0.62rem; padding: 2px 8px; border-radius: 2px; }
+  .ri-tag.yours { background: rgba(192,57,43,0.15); border: 1px solid var(--wrong); color: var(--red-muted); }
+  .ri-tag.correct { background: rgba(39,174,96,0.1); border: 1px solid var(--correct); color: #82e0aa; }
+  .ri-q { font-size: 0.75rem; color: var(--text-muted); font-weight: 300; line-height: 1.5; }
+
+  .summary-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .action-btn {
+    padding: 13px 28px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .action-btn.primary { background: var(--red-dark); border: none; color: var(--text); }
+  .action-btn.primary:hover { background: var(--red); transform: translateY(-1px); }
+  .action-btn.secondary { background: none; border: 1px solid var(--border); color: var(--text-dim); }
+  .action-btn.secondary:hover { border-color: var(--red); color: var(--text); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .quiz-body { animation: fadeIn 0.25s ease both; }
+
+  /* ─── EXIT MODAL ─── */
+  .exit-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .exit-modal-overlay.visible { display: flex; }
+  .exit-modal {
+    background: var(--bg2);
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    padding: 36px 32px 28px;
+    max-width: 380px;
+    width: 90%;
+    animation: fadeUp 0.2s ease both;
+  }
+  .exit-modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .exit-modal p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .exit-modal-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .exit-modal-btns button {
+    padding: 10px 22px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .exit-cancel { background: none; border: 1px solid var(--border); color: var(--text-dim); }
+  .exit-cancel:hover { border-color: var(--red); color: var(--text); }
+  .exit-confirm { background: var(--red-dark); border: 1px solid var(--red-dark); color: var(--text); }
+  .exit-confirm:hover { background: var(--red); border-color: var(--red); }
+
+  @media (max-width: 640px) {
+    .topbar, .quiz-progress, .quiz-body, .subjects-hero, .subjects-grid, .config-body, .summary-body { padding-left: 20px; padding-right: 20px; }
+    .q-dot-row { display: none; }
+    .subjects-hero h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ SUBJECT SELECTION ════════════════════ -->
+<div class="screen active" id="screen-subjects">
+  <div class="topbar">
+    <div class="brand">ExamPortal <span>Practice Examination Platform</span></div>
+  </div>
+  <div class="subjects-hero">
+    <div class="eyebrow">Select a Subject</div>
+    <h1>Choose your <em>exam.</em></h1>
+    <p>Select a subject below to begin a practice session. More subjects will be added over time.</p>
+  </div>
+  <div class="subjects-grid" id="subjects-grid">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<!-- ════════════════════ CONFIG ════════════════════ -->
+<div class="screen" id="screen-config">
+  <div class="topbar">
+    <div class="brand">ExamPortal <span>Practice Examination Platform</span></div>
+  </div>
+  <div class="config-body">
+    <button class="back-link" onclick="goTo('screen-subjects')">← Back to Subjects</button>
+    <h2 id="cfg-title">Exam <em>Settings</em></h2>
+    <p class="config-sub" id="cfg-sub">Configure your exam session before starting.</p>
+
+    <div class="config-option" id="cfg-shuffle" onclick="toggleShuffle()">
+      <div class="config-opt-info">
+        <div class="config-opt-title">Shuffle Questions</div>
+        <div class="config-opt-desc">Randomize the order of questions each session</div>
+      </div>
+      <div class="toggle" id="toggle-shuffle"></div>
+    </div>
+
+    <button class="start-btn" onclick="startExam()">Begin Exam →</button>
+  </div>
+</div>
+
+<!-- ════════════════════ QUIZ ════════════════════ -->
+<div class="screen" id="screen-quiz">
+  <div class="topbar">
+    <div class="brand" id="quiz-brand">FDS <span>Mock Final Examination</span></div>
+    <div class="topbar-right">
+      <button class="ghost-btn" onclick="exitExam()">✕ Exit</button>
+    </div>
+  </div>
+  <div class="quiz-progress">
+    <div class="qp-row">
+      <span class="qp-label" id="qp-label">1 / 70</span>
+      <div class="qp-track"><div class="qp-fill" id="qp-fill" style="width:0%"></div></div>
+      <span class="qp-score" id="qp-score">0 correct</span>
+    </div>
+  </div>
+  <div class="quiz-body" id="quiz-body"></div>
+</div>
+
+<!-- ════════════════════ SUMMARY ════════════════════ -->
+<div class="screen" id="screen-summary">
+  <div class="topbar">
+    <div class="brand">ExamPortal <span>Results</span></div>
+  </div>
+  <div class="summary-body" id="summary-body"></div>
+</div>
+
+<!-- ════════════════════ EXIT MODAL ════════════════════ -->
+<div class="exit-modal-overlay" id="exit-modal-overlay">
+  <div class="exit-modal">
+    <h3>Exit Exam?</h3>
+    <p>Your current progress and answers will be lost. Are you sure you want to exit?</p>
+    <div class="exit-modal-btns">
+      <button class="exit-cancel" onclick="cancelExit()">Cancel</button>
+      <button class="exit-confirm" onclick="confirmExit()">Yes, Exit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DATA
+═══════════════════════════════════════ */
+const SUBJECTS = [
+  {
+    id: 'fds',
+    code: 'FDS',
+    title: 'Fundamentals of Database Systems',
+    desc: 'Covers normalization, functional dependencies, semi-structured data, web applications, and security. Chapters 5–7.',
+    chapters: 'Ch. 5–7',
+    items: 70,
+    bloom: 5,
+  }
+];
+
+const BLOOM_MAP = {
+  Remembering:  [1,2,3,4,5,6,7,8,9,10,11,12],
+  Understanding:[13,14,15,16,17,18,19,20,21,22,23,24],
+  Applying:     [25,26,27,28,29,30],
+  Analyzing:    [31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51],
+  Evaluating:   [52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70]
+};
+
+const ANSWER_KEY = {
+  1:'A',2:'A',3:'A',4:'A',5:'A',6:'A',7:'A',8:'A',9:'A',10:'B',
+  11:'B',12:'B',13:'B',14:'B',15:'B',16:'B',17:'B',18:'B',19:'B',20:'B',
+  21:'B',22:'B',23:'B',24:'B',25:'C',26:'C',27:'C',28:'C',29:'C',30:'C',
+  31:'C',32:'C',33:'C',34:'C',35:'C',36:'B',37:'B',38:'B',39:'B',40:'B',
+  41:'C',42:'C',43:'C',44:'C',45:'C',46:'C',47:'C',48:'C',49:'C',50:'C',
+  51:'D',52:'D',53:'D',54:'D',55:'D',56:'D',57:'D',58:'D',59:'D',60:'D',
+  61:'D',62:'D',63:'D',64:'D',65:'D',66:'D',67:'D',68:'D',69:'D',70:'D'
+};
+
+const SECTION_LABELS = {
+  Remembering:'Remembering', Understanding:'Understanding',
+  Applying:'Applying', Analyzing:'Analyzing', Evaluating:'Evaluating'
+};
+
+function getSectionForNum(n) {
+  for (const [sec, nums] of Object.entries(BLOOM_MAP)) {
+    if (nums.includes(n)) return sec;
+  }
+  return '';
+}
+
+const TABLES = {
+  courseReg: {
+    cols: ['StudentRegNo','StudentPhone','CourseID','CourseLevel','InstructorID','InstructorEmail','Term','FinalGrade'],
+    rows: [
+      ['S101','555-1234','CS101','Undergrad','I001','i001@uni.edu','2025A','A'],
+      ['S101','555-1234','CS201','Undergrad','I002','i002@uni.edu','2025A','B+'],
+      ['S102','555-5678','CS101','Undergrad','I001','i001@uni.edu','2025A','A-'],
+    ]
+  },
+  shipment: {
+    cols: ['ShipmentID','WarehouseID','WarehouseCity','ProductCode','ProductDesc','ShipperID','ShipperName','Quantity','ShipDate'],
+    rows: [
+      ['SH01','W01','Manila','P200','Keyboard','SP01','FastShip','30','2025-01-10'],
+      ['SH01','W01','Manila','P100','Hard Drive','SP01','FastShip','50','2025-01-10'],
+      ['SH02','W02','Cebu','P300','Monitor','SP02','QuickDeliver','20','2025-01-12'],
+    ]
+  }
+};
+const FDS = {
+  courseReg: ['StudentRegNo → StudentPhone','CourseID → CourseLevel, InstructorID','InstructorID → InstructorEmail','(StudentRegNo, CourseID, Term) → FinalGrade','PK: (StudentRegNo, CourseID, Term)'],
+  shipment:  ['ShipmentID → WarehouseID, ShipperID, ShipDate','WarehouseID → WarehouseCity','ProductCode → ProductDesc','ShipperID → ShipperName','(ShipmentID, ProductCode) → Quantity','PK: (ShipmentID, ProductCode)']
+};
+
+const ALL_QUESTIONS = [
+  {n:1,  text:'In database design, which term describes a problem arising from data redundancy that leads to errors during insert, delete, or update operations?', opts:['Anomaly','Dependency','Normalization','Constraint']},
+  {n:2,  text:'Which informal design guideline suggests that a relation schema should correspond to one entity or one relationship type to avoid semantic ambiguity?', opts:['Guideline 1 – Clear semantics','Guideline 2 – Avoid anomalies','Guideline 3 – Limit NULLs','Guideline 4 – Avoid spurious tuples']},
+  {n:3,  text:'A functional dependency where attribute X uniquely determines attribute Y is formally written as:', opts:['X → Y','X →→ Y','X ⋈ Y','X |><| Y']},
+  {n:4,  text:'Which type of dependency occurs when a relation can be decomposed into two or more relations and then rejoined without losing information?', opts:['Join dependency','Multivalued dependency','Functional dependency','Temporal dependency']},
+  {n:5,  text:'What does XML stand for?', opts:['Extensible Markup Language','Extended Machine Language','X-linked Markup Language','External Metadata Language']},
+  {n:6,  text:'In the RDF data model, each factual statement is a triple containing subject, predicate, and what third component?', opts:['Object','Context','Node','Value']},
+  {n:7,  text:'Extremely common words such as "of", "to", and "in" that are typically removed before relevance ranking are called:', opts:['Stop words','Noise words','Trivial tokens','Null terms']},
+  {n:8,  text:'Which type of spatial data uses bitmaps or pixel matrices to represent information?', opts:['Raster data','Vector data','Geometric data','Topographic data']},
+  {n:9,  text:'In web application architecture, what small piece of text does a server send to a browser to maintain session identification across HTTP requests?', opts:['Cookie','Session ID header','Persistent socket','Cache token']},
+  {n:10, text:'Which Java API defines methods for a web server to communicate with an application program, such as doGet and doPost?', opts:['Servlet API','JSP API','JDBC API','RMI API']},
+  {n:11, text:'The acronym ORM in database application development stands for:', opts:['Object-Relational Mapping','Online Relational Model','Operational Reference Memory','Object Request Mechanism']},
+  {n:12, text:'Which type of attack occurs when an adversary secretly intercepts and possibly alters communication between two parties without their knowledge?', opts:['Man-in-the-middle attack','SQL injection attack','Cross-site scripting attack','Denial of service attack']},
+  {n:13, text:'Explain why Guideline 3 suggests avoiding attributes that may frequently be NULL in a base relation.', opts:['NULLs improve query performance','NULLs waste storage space and complicate selections, joins, and aggregations','NULLs are mandatory for foreign keys','NULLs eliminate the need for primary keys']},
+  {n:14, text:'What is the consequence of an update anomaly in a relation with redundant data?', opts:['Duplicate rows are automatically deleted','Changing a fact in one row but not in others creates inconsistency','The relation becomes unnormalized','Indexes become corrupted']},
+  {n:15, text:'Interpret the functional dependency ISBN → BookTitle. What does this mean for the database?', opts:['Multiple ISBNs can have the same title','Given an ISBN, the book title is uniquely determined','Book title determines the ISBN','ISBN and book title are independent']},
+  {n:16, text:'What is the goal of the normalization process as originally proposed by Codd?', opts:['To increase the number of tables for better organization','To minimize data redundancy and avoid update anomalies','To enforce all candidate keys as primary keys','To convert all relations into BCNF']},
+  {n:17, text:'In the TF-IDF relevance ranking model, what does inverse document frequency (IDF) measure?', opts:['How many times a term appears in a document','How rare or common a term is across the entire document collection','The length of the document','The number of hyperlinks pointing to a document']},
+  {n:18, text:'Describe a key characteristic of semi-structured data models such as JSON and XML.', opts:['They enforce a fixed, rigid schema','They allow flexible schemas where attributes can vary per tuple','They only support atomic data types','They cannot represent nested structures']},
+  {n:19, text:'In an RDF triple, what role does the predicate play?', opts:['It stores the actual data value','It defines the relationship or property between subject and object','It uniquely identifies the triple','It specifies the data type of the object']},
+  {n:20, text:'Differentiate geographic data from geometric data. Geographic data typically uses a round-earth coordinate system; geometric data uses:', opts:['Polar coordinates','Euclidean (X,Y,Z) coordinates','Pixel coordinates','Topological coordinates']},
+  {n:21, text:'What advantage does a three-layer web architecture (client, application server, database server) provide over a two-layer architecture?', opts:['Faster network transmission','Better separation of concerns and enhanced security','No need for cookies','Simpler deployment']},
+  {n:22, text:'What is the primary function of the HttpSession object in Java servlets?', opts:['To store database connection pools','To maintain user-specific state across multiple HTTP requests','To compile JSP pages into servlets','To encrypt all outgoing data']},
+  {n:23, text:'Why should a web application use the POST method instead of GET for updates or state-changing operations?', opts:['POST is faster than GET','GET parameters can be exploited for CSRF attacks and appear in browser history','POST cannot be intercepted','GET does not support parameters']},
+  {n:24, text:'What problem does connection pooling solve in web applications?', opts:['Slow SQL query execution','Overhead of repeatedly opening and closing database connections','Lack of data encryption','Cross-site scripting vulnerabilities']},
+  {n:25, text:'Apply the concept of transitive dependency: Given functional dependencies A → B and B → C, which additional dependency is implied?', opts:['B → A','C → A','A → C','C → B']},
+  {n:26, text:'Using Guideline 2 (avoid anomalies), design a database for a library where each book has a fixed publisher name. Where should the publisher name be stored to avoid update anomalies?', opts:['In every copy record of the book','In a separate publisher table linked by publisher ID','In a book table with publisher as an attribute','In the loan record']},
+  {n:27, text:'A document contains the word "database" 10 times out of 200 total terms. The word appears in 40 out of 10,000 documents. Compute the approximate TF-IDF contribution using TF = log(1 + 10/200) and IDF = 1/40. Which value is closest?', opts:['0.02','0.05','0.08','0.12']},
+  {n:28, text:'In a JSON object, you have a key "employees" whose value is an array of objects, each with "name" and "id". How would you access the name of the first employee in JavaScript after parsing?', opts:['employees[0].name','employees.name[0]','parsedObject.employees[0].name','parsedObject[0].employees.name']},
+  {n:29, text:'A web developer wants to create a JSP page that displays "Welcome, user" if a request parameter "username" exists, otherwise "Welcome, guest". Which embedded code snippet correctly implements this?', opts:['<% if (request.getParameter("username") != null) out.print("Welcome, user"); else out.print("Welcome, guest"); %>','<% if (request.getAttribute("username") != null) { %> Welcome, user <% } %>','<% String user = request.getParameter("username"); if (user != null) out.print("Welcome, " + user); else out.print("Welcome, guest"); %>','<%= request.getParameter("username") != null ? "Welcome, user" : "Welcome, guest" %>']},
+  {n:30, text:'An online banking application uses two-factor authentication. A user enters a password and a one-time code from a hardware token. Which type of attack is primarily mitigated by this second factor?', opts:['SQL injection','Cross-site scripting','Password compromise via phishing or keylogging','Denial of service']},
+  {n:31, text:'Compare insertion anomalies and deletion anomalies. Which scenario describes a deletion anomaly?', opts:['Unable to add a new course because no student has enrolled yet','Changing a supplier address requires updating many rows','Deleting the last enrollment record of a course also removes course information','Inserting a new employee without a department fails']},
+  {n:32, text:'Differentiate between a primary key and a foreign key. Which statement is correct?', opts:['A foreign key must always be NULL','A primary key can be NULL','A foreign key references the primary key of another table','A primary key is always a single column']},
+  {n:33, text:'Which normal form focuses on eliminating transitive dependencies where a non-key attribute depends on another non-key attribute?', opts:['1NF','2NF','3NF','BCNF']},
+  {n:34, text:'Analyze a table with functional dependency DeptID → DeptName. If the same DeptID appears in multiple rows, what anomaly is most likely?', opts:['Insertion anomaly','Deletion anomaly','Update anomaly (DeptName would need to be updated in many rows)','No anomaly']},
+  {n:35, text:'What is the key difference between 2NF and 3NF? A relation in 2NF but not in 3NF must have:', opts:['A partial dependency','A multivalued dependency','A transitive dependency','A join dependency']},
+  {n:36, text:'Examine the guideline about spurious tuples. Spurious tuples are generated when joining on attributes that are not properly related. What does "spurious tuple" mean?', opts:['A tuple that is encrypted','An incorrect tuple not present in the original data','A tuple with all NULL values','A duplicate tuple']},
+  {n:37, text:'Distinguish among the three anomaly types. Which anomaly is directly caused by storing the same fact (e.g., employee department name) in multiple rows?', opts:['Insertion anomaly only','Update anomaly (modifying one occurrence but not others)','Deletion anomaly only','All three equally']},
+  {n:38, text:'Compare JSON and XML as data exchange formats. Which characteristic accurately distinguishes them?', opts:['JSON uses tags; XML uses key-value pairs','JSON supports arrays and objects; XML uses nested tag hierarchies','XML is always more compact than JSON','JSON cannot represent numeric data']},
+  {n:39, text:'Wide column representation allows each tuple to have a different set of attributes, while sparse column representation:', opts:['Stores all attributes as key-value pairs outside the table','Has a fixed schema with many optional columns, storing only non-NULL values efficiently','Is used only for geographic data','Does not support indexing']},
+  {n:40, text:'Compare vector data and raster data for spatial applications. Vector data uses geometric primitives (points, lines, polygons). Raster data uses:', opts:['Triples','Bitmaps or regular grid of cells (pixels)','XML tags','JSON objects']},
+  {n:41, text:'In the PageRank algorithm, the term (1-δ) multiplies the sum of ranks from linking pages. What does the factor δ (typically set to 0.15) represent?', opts:['The probability of following a hyperlink','The damping factor that ensures convergence','The probability of teleporting to a random page','The normalization constant for total rank']},
+  {n:42, text:'A term appears in 10 documents out of a collection of 5,000 documents. Which statement about its inverse document frequency (IDF) is correct?', opts:['IDF is zero because the term is common','IDF is negative','IDF is relatively high (since the term is rare)','IDF is undefined']},
+  {n:43, text:'Analyze the representation of n-ary relationships in RDF using quads. The fourth element in a quad typically represents:', opts:['Predicate','Object','Context or graph name','Subject']},
+  {n:44, text:'Which data model allows attributes to contain sets, arrays, or nested structures without flattening into separate tables?', opts:['First normal form (1NF) model','Second normal form (2NF) model','Non-first-normal-form (NFNF) or nested relational model','BCNF model']},
+  {n:45, text:'Compare three-layer and two-layer web architectures. A two-layer architecture combines which two layers into one?', opts:['Client and web server','Web server and database server','Application server and database server (or client and application server) – typically the client directly connects to database','All layers are separate']},
+  {n:46, text:'Differentiate between a servlet and a JSP page. What is the fundamental relationship?', opts:['A servlet is always faster than JSP','A JSP page can contain only HTML, no Java','A JSP page is translated into a servlet at runtime','Servlets cannot generate HTML']},
+  {n:47, text:'Analyze the role of a cookie in HTTP session management. Where is the cookie stored?', opts:['Only on the server side in a session table','Only in the database','On the client side (browser)','On a proxy server']},
+  {n:48, text:"Which type of attack exploits a user's active session with a web application to perform unauthorized state-changing requests without the user's consent?", opts:['XSS (Cross-site scripting)','SQL injection','CSRF (Cross-site request forgery)','Phishing']},
+  {n:49, text:'In the Model-View-Controller (MVC) architecture, which component is responsible for handling user input, updating the model, and selecting a view?', opts:['Model','View','Controller','Router']},
+  {n:50, text:'In the Hibernate ORM framework, which method is commonly used to persist a new transient object to the database?', opts:['persist() or save()','merge()','update()','delete()']},
+  {n:51, text:'Which security mechanism involves checking the HTTP Referer header to verify that a request originated from a page of the same site, helping to block CSRF attacks?', opts:['Input validation','Output encoding','Referer validation','Content Security Policy']},
+  {n:52, text:'After normalizing COURSE_REG to 2NF (removing partial dependencies), which of the following transitive dependencies remains?', opts:['StudentRegNo → StudentPhone','CourseID → InstructorID','StudentRegNo → Term','CourseID → InstructorEmail (via InstructorID)'], tableRef:'courseReg', fdRef:'courseReg'},
+  {n:53, text:'Which set of relations represents a lossless 3NF decomposition of COURSE_REG?', opts:['(StudentRegNo, StudentPhone) and (CourseID, CourseLevel, InstructorID, InstructorEmail) and (StudentRegNo, CourseID, Term, FinalGrade)','(StudentRegNo, StudentPhone) and (CourseID, CourseLevel, InstructorID) and (InstructorID, InstructorEmail) and (StudentRegNo, CourseID, Term, FinalGrade)','(StudentRegNo, StudentPhone, CourseID, Term) and (CourseID, CourseLevel, InstructorID, InstructorEmail)','(StudentRegNo, StudentPhone) and (CourseID, CourseLevel, InstructorID) and (InstructorID, InstructorEmail) and (StudentRegNo, CourseID, Term, FinalGrade)'], tableRef:'courseReg', fdRef:'courseReg'},
+  {n:54, text:'Which scenario illustrates an insertion anomaly in the original COURSE_REG table?', opts:['Adding a new instructor with no assigned course is impossible','Adding a new course with no students enrolled is impossible','Adding a new student who has not yet registered for any course is impossible','All of the above'], tableRef:'courseReg', fdRef:'courseReg'},
+  {n:55, text:'In the 3NF decomposition of COURSE_REG, which insertion becomes possible that was impossible in the original?', opts:['Insert a new instructor without any course assignment','Insert a new course without any student enrollment','Insert a new student without any registration','Both A and B'], tableRef:'courseReg', fdRef:'courseReg'},
+  {n:56, text:'Which functional dependency is a transitive dependency in the original COURSE_REG?', opts:['StudentRegNo → StudentPhone','CourseID → CourseLevel','(StudentRegNo, CourseID, Term) → FinalGrade','CourseID → InstructorEmail (via InstructorID)'], tableRef:'courseReg', fdRef:'courseReg'},
+  {n:57, text:'In the correct 3NF decomposition, which relation has a composite primary key that references two other relations?', opts:['(StudentRegNo, StudentPhone)','(CourseID, CourseLevel, InstructorID)','(InstructorID, InstructorEmail)','(StudentRegNo, CourseID, Term, FinalGrade)'], tableRef:'courseReg', fdRef:'courseReg'},
+  {n:58, text:'Suppose the original COURSE_REG had an additional attribute "InstructorOffice" with FD: InstructorID → InstructorOffice. In the 3NF design, where should InstructorOffice be placed?', opts:['In the Student relation','In the Course relation','In the Grade relation','In the Instructor relation (with InstructorID as key)'], tableRef:'courseReg', fdRef:'courseReg'},
+  {n:59, text:'After decomposing SHIPMENT to 2NF (removing partial dependencies on ShipmentID and ProductCode separately), which transitive dependency remains?', opts:['ShipmentID → WarehouseCity (via WarehouseID)','ProductCode → ProductDesc','ShipmentID → ShipperName (via ShipperID)','Both A and C'], tableRef:'shipment', fdRef:'shipment'},
+  {n:60, text:'Which 3NF decomposition of SHIPMENT correctly eliminates transitive dependencies?', opts:['(ShipmentID, WarehouseID, ShipperID, ShipDate) and (ProductCode, ProductDesc) and (ShipmentID, ProductCode, Quantity)','(ShipmentID, WarehouseID, ShipperID, ShipDate), (WarehouseID, WarehouseCity), (ProductCode, ProductDesc), (ShipperID, ShipperName), (ShipmentID, ProductCode, Quantity)','(ShipmentID, WarehouseID, ShipperID, ShipDate, WarehouseCity, ShipperName) and (ProductCode, ProductDesc) and (ShipmentID, ProductCode, Quantity)','(ShipmentID, WarehouseID, ShipperID, ShipDate), (WarehouseID, WarehouseCity), (ProductCode, ProductDesc), (ShipperID, ShipperName), (ShipmentID, ProductCode, Quantity)'], tableRef:'shipment', fdRef:'shipment'},
+  {n:61, text:'Which type of anomaly occurs when deleting the only shipment that contains a particular product (e.g., ProductCode P123) from SHIPMENT causes loss of all information about that product?', opts:['Insertion anomaly','Update anomaly','Referential integrity violation','Deletion anomaly'], tableRef:'shipment', fdRef:'shipment'},
+  {n:62, text:'Which statement about the 3NF decomposition from item 60 is true?', opts:['It is lossy because the join key (ShipmentID, ProductCode) is not preserved','It fails to preserve the FD ShipperID → ShipperName','It is lossless but not dependency-preserving','It is both lossless and dependency-preserving'], tableRef:'shipment', fdRef:'shipment'},
+  {n:63, text:'Suppose we add an FD: WarehouseCity → Region. In the 3NF design, where should Region be added?', opts:['To the Shipment relation','To the Product relation','To the Shipper relation','To the Warehouse relation (with WarehouseCity as key)'], tableRef:'shipment', fdRef:'shipment'},
+  {n:64, text:'To display warehouse city, product description, and shipper name for a given shipment from the 3NF decomposition, the minimum number of tables to join is:', opts:['2','3','4','5'], tableRef:'shipment', fdRef:'shipment'},
+  {n:65, text:'Evaluate the following JSON object: {"store": {"books": [{"title": "DB", "price": 45}, {"title": "OS", "price": 50}]}}. What is the data type of the value associated with the key "books"?', opts:['String','Object','Number','Array']},
+  {n:66, text:'In the RDF triple (:Lecture1, :hasTopic, "Normalization"), which parts are URIs (or prefixed names) and which is a literal?', opts:['All three are URIs',':Lecture1 and :hasTopic are URIs; "Normalization" is a literal','Only :hasTopic is a URI',':Lecture1 is a literal; others are URIs']},
+  {n:67, text:'Which component of the PageRank algorithm is not used when ranking a document collection without hyperlinks (e.g., a set of text files)?', opts:['Random teleportation probability','Damping factor','Link structure (incoming/outgoing hyperlinks)','Term frequency']},
+  {n:68, text:'Which statement about Java Server Pages (JSP) is false?', opts:['JSP pages can contain custom tag libraries','JSP is translated into a servlet on first request','JSP allows embedding Java code within HTML','JSP is executed on the client browser']},
+  {n:69, text:'Which of the following is the least secure practice for storing database credentials in a web application?', opts:['Using environment variables set outside the web root','Storing credentials in a configuration file with strict file permissions outside the document root','Using a secrets management service (e.g., AWS Secrets Manager)','Hardcoding the username and password in a JSP file inside the web-accessible directory']},
+  {n:70, text:'Which of the following statements about object-relational mapping (ORM) performance is false?', opts:['Lazy loading can reduce initial load time by deferring fetching of associated objects','The N+1 query problem can be mitigated by using join fetching or batch fetching','Eager fetching may retrieve more data than necessary, leading to performance overhead','ORM queries are always faster than handwritten SQL for complex joins']},
+];
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let state = {
+  subject: null,
+  shuffle: false,
+  questions: [],
+  current: 0,
+  answers: {},   // index → chosen letter
+  correctCount: 0,
+  shownTables: new Set(),
+};
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════════
+   SUBJECT SELECTION
+═══════════════════════════════════════ */
+function renderSubjects() {
+  const grid = document.getElementById('subjects-grid');
+  grid.innerHTML = '';
+  SUBJECTS.forEach(sub => {
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.innerHTML = `
+      <span class="sc-arrow">↗</span>
+      <div class="sc-tag">${sub.code}</div>
+      <div class="sc-title">${sub.title}</div>
+      <div class="sc-desc">${sub.desc}</div>
+      <div class="sc-meta">
+        <div class="sc-meta-item"><span class="val">${sub.items}</span><span class="lbl">Questions</span></div>
+        <div class="sc-meta-item"><span class="val">${sub.bloom}</span><span class="lbl">Bloom Levels</span></div>
+        <div class="sc-meta-item"><span class="val">${sub.chapters}</span><span class="lbl">Coverage</span></div>
+      </div>`;
+    card.onclick = () => selectSubject(sub);
+    grid.appendChild(card);
+  });
+}
+
+function selectSubject(sub) {
+  state.subject = sub;
+  document.getElementById('cfg-title').innerHTML = `Exam <em>Settings</em>`;
+  document.getElementById('cfg-sub').textContent = `${sub.title} — ${sub.items} questions`;
+  goTo('screen-config');
+}
+
+/* ═══════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════ */
+function toggleShuffle() {
+  state.shuffle = !state.shuffle;
+  const t = document.getElementById('toggle-shuffle');
+  const opt = document.getElementById('cfg-shuffle');
+  t.classList.toggle('on', state.shuffle);
+  opt.classList.toggle('active', state.shuffle);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startExam() {
+  state.questions = state.shuffle ? shuffle(ALL_QUESTIONS) : [...ALL_QUESTIONS];
+  state.current = 0;
+  state.answers = {};
+  state.correctCount = 0;
+  state.shownTables = new Set();
+
+  document.getElementById('quiz-brand').innerHTML = `${state.subject.code} <span>${state.subject.title}</span>`;
+  goTo('screen-quiz');
+  renderCurrentQuestion();
+}
+
+function exitExam() {
+  document.getElementById('exit-modal-overlay').classList.add('visible');
+}
+
+function confirmExit() {
+  document.getElementById('exit-modal-overlay').classList.remove('visible');
+  goTo('screen-subjects');
+}
+
+function cancelExit() {
+  document.getElementById('exit-modal-overlay').classList.remove('visible');
+}
+
+/* ═══════════════════════════════════════
+   QUIZ
+═══════════════════════════════════════ */
+function renderCurrentQuestion() {
+  const idx = state.current;
+  const q = state.questions[idx];
+  const total = state.questions.length;
+  const answered = Object.keys(state.answers).length;
+  const pct = Math.round(((idx + 1) / total) * 100);
+
+  // Update progress bar
+  document.getElementById('qp-label').textContent = `${idx + 1} / ${total}`;
+  document.getElementById('qp-fill').style.width = pct + '%';
+  document.getElementById('qp-score').textContent = `${state.correctCount} correct`;
+
+  const section = getSectionForNum(q.n);
+  const alreadyAnswered = state.answers[idx] !== undefined;
+  const chosen = state.answers[idx];
+  const correct = ANSWER_KEY[q.n];
+  const isCorrect = chosen === correct;
+
+  let html = `
+    <div class="q-counter">Question <span>${idx + 1}</span> of ${total} &nbsp;·&nbsp; Item ${q.n}</div>
+    <div class="q-section-badge">${section}</div>
+  `;
+
+  // Show table/FD if needed (only for certain items, show once per table key in a session)
+  if (q.tableRef) {
+    html += buildTableHTML(q.tableRef);
+    if (q.fdRef) html += buildFDHTML(q.fdRef);
+  }
+
+  html += `<div class="q-text">${q.text}</div>`;
+  html += `<div class="opts-grid">`;
+  q.opts.forEach((opt, oi) => {
+    const letter = ['A','B','C','D'][oi];
+    let cls = '';
+    if (alreadyAnswered) {
+      if (letter === chosen && isCorrect) cls = 'correct-ans';
+      else if (letter === chosen && !isCorrect) cls = 'wrong-ans';
+      else if (letter === correct && !isCorrect) cls = 'reveal-ans';
+    }
+    html += `<button class="opt ${cls}" onclick="answerQuestion('${letter}')" ${alreadyAnswered ? 'disabled' : ''}>
+      <span class="opt-letter">${letter}</span>${opt}
+    </button>`;
+  });
+  html += `</div>`;
+
+  // Feedback
+  if (alreadyAnswered) {
+    const fbCls = isCorrect ? 'correct' : 'wrong';
+    const icon = isCorrect ? '✓' : '✗';
+    const msg = isCorrect
+      ? `Correct! The answer is <strong>${correct}</strong>.`
+      : `Incorrect. You chose <strong>${chosen}</strong>. The correct answer is <strong>${correct}</strong>.`;
+    html += `<div class="q-feedback ${fbCls}" style="display:flex"><span class="icon">${icon}</span>${msg}</div>`;
+  } else {
+    html += `<div class="q-feedback"></div>`;
+  }
+
+  // Nav
+  const isLast = idx === total - 1;
+  const nextDisabled = !alreadyAnswered ? 'disabled' : '';
+  html += `<div class="q-nav">
+    <button class="nav-btn" onclick="prevQuestion()" ${idx === 0 ? 'disabled' : ''}>← Prev</button>
+    <div class="q-dot-row" id="dot-row"></div>
+    ${isLast
+      ? `<button class="nav-btn primary" onclick="finishExam()" ${!alreadyAnswered ? 'disabled' : ''}>Finish →</button>`
+      : `<button class="nav-btn primary" onclick="nextQuestion()" ${nextDisabled}>Next →</button>`
+    }
+  </div>`;
+
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = html;
+
+  // Render dots
+  renderDots();
+}
+
+function buildTableHTML(key) {
+  const t = TABLES[key];
+  let html = '<div class="q-table-wrap"><table class="q-table"><thead><tr>';
+  t.cols.forEach(c => html += `<th>${c}</th>`);
+  html += '</tr></thead><tbody>';
+  t.rows.forEach(r => { html += '<tr>'; r.forEach(c => html += `<td>${c}</td>`); html += '</tr>'; });
+  html += '</tbody></table></div>';
+  return html;
+}
+
+function buildFDHTML(key) {
+  let html = '<div class="q-fd"><ul>';
+  FDS[key].forEach(f => html += `<li>• ${f}</li>`);
+  html += '</ul></div>';
+  return html;
+}
+
+function renderDots() {
+  const row = document.getElementById('dot-row');
+  if (!row) return;
+  const total = state.questions.length;
+  // Show max 30 dots to avoid overflow
+  const showDots = total <= 30;
+  if (!showDots) { row.style.display = 'none'; return; }
+  let html = '';
+  state.questions.forEach((_, i) => {
+    let cls = 'q-dot';
+    if (i === state.current) cls += ' current';
+    else if (state.answers[i] !== undefined) {
+      const q = state.questions[i];
+      cls += state.answers[i] === ANSWER_KEY[q.n] ? ' dot-correct' : ' dot-wrong';
+    }
+    html += `<div class="${cls}" onclick="jumpTo(${i})" title="Q${i+1}"></div>`;
+  });
+  row.innerHTML = html;
+}
+
+function answerQuestion(letter) {
+  const idx = state.current;
+  if (state.answers[idx] !== undefined) return;
+  const q = state.questions[idx];
+  const correct = ANSWER_KEY[q.n];
+  state.answers[idx] = letter;
+  if (letter === correct) state.correctCount++;
+  renderCurrentQuestion();
+}
+
+function nextQuestion() {
+  if (state.current < state.questions.length - 1) {
+    state.current++;
+    document.getElementById('quiz-body').style.animation = 'none';
+    requestAnimationFrame(() => {
+      document.getElementById('quiz-body').style.animation = '';
+      renderCurrentQuestion();
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function prevQuestion() {
+  if (state.current > 0) {
+    state.current--;
+    renderCurrentQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function jumpTo(idx) {
+  state.current = idx;
+  renderCurrentQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════════
+   FINISH / SUMMARY
+═══════════════════════════════════════ */
+function finishExam() {
+  goTo('screen-summary');
+  buildSummary();
+}
+
+function getGrade(pct) {
+  if (pct >= 97) return { letter:'A+', title:'Outstanding', desc:'Exceptional mastery across all topics.' };
+  if (pct >= 93) return { letter:'A',  title:'Excellent',   desc:'Strong command across all chapters.' };
+  if (pct >= 90) return { letter:'A-', title:'Very Good',   desc:'Near-excellent performance.' };
+  if (pct >= 87) return { letter:'B+', title:'Good',        desc:'Above average understanding.' };
+  if (pct >= 83) return { letter:'B',  title:'Above Avg',   desc:'Solid grasp of core concepts.' };
+  if (pct >= 80) return { letter:'B-', title:'Satisfactory',desc:'Adequate, with room to improve.' };
+  if (pct >= 75) return { letter:'C+', title:'Fair',        desc:'Basic understanding; needs review.' };
+  if (pct >= 70) return { letter:'C',  title:'Passing',     desc:'Minimum competency demonstrated.' };
+  return            { letter:'F',  title:'Needs Work',  desc:'Significant review required.' };
+}
+
+function buildSummary() {
+  const total = state.questions.length;
+  const correct = state.correctCount;
+  const pct = Math.round((correct / total) * 100);
+  const g = getGrade(pct);
+
+  // Bloom breakdown
+  let bloomHTML = '';
+  Object.entries(BLOOM_MAP).forEach(([level, nums]) => {
+    const levelQs = state.questions.filter(q => nums.includes(q.n));
+    if (!levelQs.length) return;
+    const levelCorrect = levelQs.filter((q, qi) => {
+      const globalIdx = state.questions.indexOf(q);
+      return state.answers[globalIdx] === ANSWER_KEY[q.n];
+    }).length;
+    const bpct = Math.round((levelCorrect / levelQs.length) * 100);
+    bloomHTML += `<div class="bloom-row">
+      <span class="bl">${level}</span>
+      <div class="bloom-track"><div class="bloom-fill" style="width:${bpct}%"></div></div>
+      <span class="bp">${levelCorrect}/${levelQs.length}</span>
+    </div>`;
+  });
+
+  // Wrong items
+  const wrongItems = state.questions
+    .map((q, i) => ({ q, i, chosen: state.answers[i], correct: ANSWER_KEY[q.n] }))
+    .filter(x => x.chosen !== x.correct)
+    .sort((a, b) => a.q.n - b.q.n);
+
+  let reviewHTML = '';
+  if (wrongItems.length > 0) {
+    reviewHTML = `<div class="review-section"><h3>Items to Review — ${wrongItems.length} incorrect</h3>`;
+    wrongItems.forEach(({ q, chosen, correct }) => {
+      reviewHTML += `<div class="review-item">
+        <div class="ri-top">
+          <span class="ri-num">Item ${q.n} · ${getSectionForNum(q.n)}</span>
+          <div class="ri-tags">
+            <span class="ri-tag yours">You: ${chosen}</span>
+            <span class="ri-tag correct">Correct: ${correct}</span>
+          </div>
+        </div>
+        <div class="ri-q">${q.text.substring(0, 130)}${q.text.length > 130 ? '…' : ''}</div>
+      </div>`;
+    });
+    reviewHTML += '</div>';
+  } else {
+    reviewHTML = `<div class="review-section"><h3>Review</h3><p style="color:var(--correct);font-size:0.82rem;font-weight:300;">Perfect score — all ${total} answers correct!</p></div>`;
+  }
+
+  document.getElementById('summary-body').innerHTML = `
+    <div class="eyebrow">Exam Complete</div>
+    <h2>Your <em>Results</em></h2>
+    <p class="summary-sub">${state.subject.title}</p>
+    <div class="grade-card">
+      <div class="grade-letter">${g.letter}</div>
+      <div class="grade-info">
+        <div class="g-title">${g.title}</div>
+        <div class="g-desc">${g.desc}</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box s-neutral"><div class="sval">${pct}%</div><div class="slbl">Score</div></div>
+      <div class="stat-box s-good"><div class="sval">${correct}</div><div class="slbl">Correct</div></div>
+      <div class="stat-box s-bad"><div class="sval">${total - correct}</div><div class="slbl">Incorrect</div></div>
+      <div class="stat-box s-neutral"><div class="sval">${total}</div><div class="slbl">Total</div></div>
+    </div>
+    <div class="bloom-section">
+      <h3>Performance by Bloom's Level</h3>
+      ${bloomHTML}
+    </div>
+    ${reviewHTML}
+    <div class="summary-actions">
+      <button class="action-btn primary" onclick="retakeExam()">↺ Retake Exam</button>
+      <button class="action-btn secondary" onclick="goTo('screen-subjects')">← All Subjects</button>
+    </div>
+  `;
+}
+
+function retakeExam() {
+  goTo('screen-config');
+}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+renderSubjects();
+</script>
+</body>
+</html>
