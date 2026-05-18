@@ -913,10 +913,28 @@ const SUBJECTS = [
     chapters: 'Ch. 5–7',
     items: 70,
     bloom: 5,
+  },
+  {
+    id: 'ds1',
+    code: 'DS1',
+    title: 'Discrete Structure 1',
+    desc: 'Covers set theory, relations, functions, and arguments including rules of inference and predicate logic.',
+    chapters: 'Set Theory · Relations · Functions · Arguments',
+    items: 80,
+    bloom: 4,
+  },
+  {
+    id: 'ias',
+    code: 'IAS',
+    title: 'Information Assurance and Security',
+    desc: 'Covers PKI, key management, access control, identity and authentication, virtualization, and cloud security.',
+    chapters: 'Modules 4–7',
+    items: 80,
+    bloom: 5,
   }
 ];
 
-const BLOOM_MAP = {
+const BLOOM_MAP_FDS = {
   Remembering:  [1,2,3,4,5,6,7,8,9,10,11,12],
   Understanding:[13,14,15,16,17,18,19,20,21,22,23,24],
   Applying:     [25,26,27,28,29,30],
@@ -924,7 +942,7 @@ const BLOOM_MAP = {
   Evaluating:   [52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70]
 };
 
-const ANSWER_KEY = {
+const ANSWER_KEY_FDS = {
   1:'A',2:'A',3:'A',4:'A',5:'A',6:'A',7:'A',8:'A',9:'A',10:'B',
   11:'B',12:'B',13:'B',14:'B',15:'B',16:'B',17:'B',18:'B',19:'B',20:'B',
   21:'B',22:'B',23:'B',24:'B',25:'C',26:'C',27:'C',28:'C',29:'C',30:'C',
@@ -934,10 +952,236 @@ const ANSWER_KEY = {
   61:'D',62:'D',63:'D',64:'D',65:'D',66:'D',67:'D',68:'D',69:'D',70:'D'
 };
 
-const SECTION_LABELS = {
+/* ── DS1 DATA ── */
+const BLOOM_MAP_DS1 = {
+  'Set Theory':  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+  'Relations':   [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40],
+  'Functions':   [41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60],
+  'Arguments':   [61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80]
+};
+
+const ANSWER_KEY_DS1 = {
+  1:'C',2:'A',3:'B',4:'D',5:'C',6:'D',7:'A',8:'B',9:'B',10:'A',
+  11:'D',12:'C',13:'B',14:'D',15:'C',16:'B',17:'B',18:'C',19:'B',20:'D',
+  21:'C',22:'C',23:'B',24:'A',25:'C',26:'C',27:'B',28:'A',29:'C',30:'B',
+  31:'C',32:'B',33:'C',34:'B',35:'A',36:'B',37:'A',38:'B',39:'B',40:'C',
+  41:'B',42:'B',43:'C',44:'C',45:'A',46:'C',47:'A',48:'C',49:'A',50:'C',
+  51:'B',52:'B',53:'C',54:'B',55:'C',56:'B',57:'A',58:'C',59:'C',60:'C',
+  61:'A',62:'C',63:'D',64:'A',65:'B',66:'A',67:'C',68:'D',69:'C',70:'A',
+  71:'B',72:'A',73:'A',74:'C',75:'B',76:'C',77:'D',78:'A',79:'C',80:'D'
+};
+
+const ALL_QUESTIONS_DS1 = [
+  /* SET THEORY */
+  {n:1, text:'A collection or aggregate of objects of any kind is called a:', opts:['Relation','Function','Set','Argument']},
+  {n:2, text:'Which method of describing a set involves listing its elements (e.g., A = {1, 2, 3})?', opts:['Roster Method','Rule Method','Set-builder Notation','Infinite Method']},
+  {n:3, text:'What does the "Cardinality" of a set refer to?', opts:['The highest number in the set','The number of elements in a given set','The intersection of two sets','The universal discourse of the set']},
+  {n:4, text:'Which of the following represents a set with no elements?', opts:['Universal Set','Power Set','Infinite Set','Null Set']},
+  {n:5, text:'Two sets A and B are equal (A = B) if and only if:', opts:['A ⊆ B','B ⊆ A','A ⊆ B and B ⊆ A','A ∪ B = A ∩ B']},
+  {n:6, text:'If A = {1, 2, 3} and B = {2, 3, 4, 5}, what is A ∪ B?', opts:['{2, 3}','{1}','{4, 5}','{1, 2, 3, 4, 5}']},
+  {n:7, text:'Based on the sets A = {1, 2, 3} and B = {2, 3, 4, 5}, what is A ∩ B?', opts:['{2, 3}','{1}','{4, 5}','{1, 2, 3, 4, 5}']},
+  {n:8, text:'Based on the sets A = {1, 2, 3} and B = {2, 3, 4, 5}, what is the set difference A − B?', opts:['{2, 3}','{1}','{4, 5}','{1, 2, 3, 4, 5}']},
+  {n:9, text:'The symmetric difference of A and B is defined as:', opts:['(A ∪ B) − (A ∩ B)','(A − B) ∪ (B − A)','Both A and B','(A ∩ B) − (A ∪ B)']},
+  {n:10, text:'What is the symmetric difference (A ⊕ B) of A = {a, e, i, o, u} and B = {e, o, n, s}?', opts:['{a, i, u, n, s}','{e, o}','{a, e, i, o, u, n, s}','{n, s}']},
+  {n:11, text:'The set of all subsets of A is called the:', opts:['Universal Set','Cartesian Product','Complement','Power Set']},
+  {n:12, text:'If A = {a, b, c}, what is the cardinality of its Power Set, P(A)?', opts:['3','6','8','9']},
+  {n:13, text:'For any sets A and B, the set of all ordered pairs (a, b) where a ∈ A and b ∈ B is defined as the:', opts:['Intersection','Cartesian Product','Symmetric Difference','Power Set']},
+  {n:14, text:'If A = {0, 1} and B = {x, y, z}, how many ordered pairs are in A × B?', opts:['2','3','5','6']},
+  {n:15, text:'According to the Set Theorems Governing Union, A ∪ A is equal to:', opts:['U','∅','A','A\'']},
+  {n:16, text:'According to De Morgan\'s Laws for sets, (A ∪ B)\' is equal to:', opts:['A\' ∪ B\'','A\' ∩ B\'','A ∩ B','A ∪ B']},
+  {n:17, text:'Let U = {1, 2, 3, 4, 5, 6, 7} and A = {1, 2, 3}. What is the complement of A (A\')?', opts:['{1, 2, 3}','{4, 5, 6, 7}','{1, 2, 3, 4, 5, 6, 7}','∅']},
+  {n:18, text:'If A ⊆ B and B ⊆ C, then:', opts:['C ⊆ A','A = C','A ⊆ C','B = A']},
+  {n:19, text:'Which of the following defines the Complement of A (A\')?', opts:['{x ∈ U | x ∈ A}','{x ∈ U | x ∉ A}','{x ∈ A | x ∈ B}','{x ∈ A | x ∉ B}']},
+  {n:20, text:'A ∩ A\' is equal to:', opts:['A','U','A\'','∅']},
+  /* RELATIONS */
+  {n:21, text:'A relation from a set A to set B is defined to be any subset of:', opts:['A ∪ B','A ∩ B','A × B','P(A)']},
+  {n:22, text:'In a relation R, the set of all first elements \'a\' where (a, b) ∈ R is called the:', opts:['Image','Range','Domain','Inverse']},
+  {n:23, text:'Find the range of the relation R = {(−2, 2), (−1, 3), (0, 5), (1, 7)}.', opts:['{−2, −1, 0, 1}','{2, 3, 5, 7}','{1, 3, 5, 7}','{−2, 2, −1, 3}']},
+  {n:24, text:'A relation where the domain is equal to the range is known as a/an:', opts:['Identity relation','Void relation','Universal relation','Antisymmetric relation']},
+  {n:25, text:'A relation that consists of all possible ordered pairs of elements of a set is called a/an:', opts:['Trivial relation','Identity relation','Universal relation','Void relation']},
+  {n:26, text:'In the directed graph of a relation, the dots are called:', opts:['Directed arcs','Edges','Vertices','Vectors']},
+  {n:27, text:'A relation R on A is Reflexive if:', opts:['For all a, b ∈ A, if (a,b) ∈ R then (b,a) ∈ R','For all a ∈ A, (a,a) ∈ R','For all a,b,c ∈ A, if (a,b) ∈ R and (b,c) ∈ R, then (a,c) ∈ R','For all a,b ∈ A, if (a,b) ∈ R and (b,a) ∈ R, then a=b']},
+  {n:28, text:'A relation R on A is Symmetric if:', opts:['For all a, b ∈ A, if (a,b) ∈ R then (b,a) ∈ R','For all a ∈ A, (a,a) ∈ R','For all a,b,c ∈ A, if (a,b) ∈ R and (b,c) ∈ R, then (a,c) ∈ R','For all a,b ∈ A, if (a,b) ∈ R and (b,a) ∈ R, then a=b']},
+  {n:29, text:'A relation R on A is Transitive if:', opts:['For all a, b ∈ A, if (a,b) ∈ R then (b,a) ∈ R','For all a ∈ A, (a,a) ∈ R','For all a,b,c ∈ A, if (a,b) ∈ R and (b,c) ∈ R, then (a,c) ∈ R','For all a,b ∈ A, if (a,b) ∈ R and (b,a) ∈ R, then a=b']},
+  {n:30, text:'A relation R on a set A is called an equivalence relation if R is:', opts:['Reflexive, Antisymmetric, and Transitive','Reflexive, Symmetric, and Transitive','Irreflexive, Symmetric, and Transitive','Reflexive, Asymmetric, and Transitive']},
+  {n:31, text:'A relation R on a set A such that for all a, b, if (a,b) ∈ R and (b,a) ∈ R, then a = b is called:', opts:['Symmetric','Asymmetric','Antisymmetric','Transitive']},
+  {n:32, text:'If R = {(2, 5), (2, 6), (4, 9)}, what is its inverse, R⁻¹?', opts:['{(2, 5), (2, 6), (4, 9)}','{(5, 2), (6, 2), (9, 4)}','{(−2, −5), (−2, −6), (−4, −9)}','{(5, 2), (6, 4), (9, 4)}']},
+  {n:33, text:'Let A = {1, 2, 3}. R = {(1,2), (2,1)}. Which of the following is true?', opts:['R is Reflexive','R is Transitive','R is Symmetric','R is an Equivalence relation']},
+  {n:34, text:'The composition of relation R (from A to B) and S (from B to C) is denoted by:', opts:['R ◦ S','S ◦ R','R × S','R ∪ S']},
+  {n:35, text:'Let R = {(a, t), (b, v)} and S = {(t, x), (v, y)}. What is S ◦ R?', opts:['{(a, x), (b, y)}','{(t, a), (v, b)}','{(x, a), (y, b)}','{(a, y), (b, x)}']},
+  {n:36, text:'Let R = {(2, t), (4, u)} and S = {(2, t), (6, u)}. What is R ∪ S?', opts:['{(2, t)}','{(2, t), (4, u), (6, u)}','{(4, u), (6, u)}','∅']},
+  {n:37, text:'Let R = {(2, t), (4, u)} and S = {(2, t), (6, u)}. What is R ∩ S?', opts:['{(2, t)}','{(2, t), (4, u), (6, u)}','{(4, u), (6, u)}','∅']},
+  {n:38, text:'Let R = {(2, t), (4, u)} and S = {(2, t), (6, u)}. What is R − S?', opts:['{(2, t)}','{(4, u)}','{(6, u)}','{(4, u), (6, u)}']},
+  {n:39, text:'An empty relation R = ∅ on a non-empty set A is:', opts:['Reflexive','Symmetric and Transitive','An equivalence relation','Universal']},
+  {n:40, text:'If R = {(a,b) | a < b} on set A = {1, 2, 3}, which ordered pair belongs to R?', opts:['(2, 1)','(3, 3)','(1, 2)','(3, 2)']},
+  /* FUNCTIONS */
+  {n:41, text:'A relation where exactly one element of set B is related to each element of set A is called a:', opts:['Equivalence Relation','Function','Symmetric Relation','Cartesian Product']},
+  {n:42, text:'Which of the following sets of ordered pairs represents a function?', opts:['{(a, 1), (a, 2), (b, 3)}','{(a, 1), (b, 1), (c, 1)}','{(1, a), (1, b), (1, c)}','{(a, 1), (b, 2), (b, 3)}']},
+  {n:43, text:'The set of all values of the independent variable for which the function is defined is the:', opts:['Image','Range','Domain','Inverse']},
+  {n:44, text:'A function f: A → B is called "one-to-one" or:', opts:['Surjective','Bijective','Injective','Equivalence']},
+  {n:45, text:'A function f: A → B is called "onto" or:', opts:['Surjective','Bijective','Injective','Discursive']},
+  {n:46, text:'A function is called a one-to-one correspondence (bijective) if it is:', opts:['Only injective','Only surjective','Both one-to-one and onto','Neither one-to-one nor onto']},
+  {n:47, text:'Let f(x) = −x² + 3x − 5. What is the value of f(2)?', opts:['−3','5','−7','3']},
+  {n:48, text:'The composition of the functions f and g, denoted as (f ◦ g)(x), is given by:', opts:['f(x) * g(x)','g(f(x))','f(g(x))','f(x) + g(x)']},
+  {n:49, text:'Given f(x) = 3x + 1 and g(x) = 4x − 5. What is (f ◦ g)(x)?', opts:['12x − 14','12x − 4','12x − 15','7x − 4']},
+  {n:50, text:'Given f(x) = 3x + 1 and g(x) = 4x − 5. What is (g ◦ f)(x)?', opts:['12x − 14','12x − 4','12x − 1','12x + 1']},
+  {n:51, text:'Let f(x) = x² − 1 and g(x) = 2x + 3. What is (f + g)(x)?', opts:['x² + 2x − 4','x² + 2x + 2','2x³ + 3x² − 2x − 3','x² − 2x + 2']},
+  {n:52, text:'Let f(x) = x² − 1 and g(x) = 2x + 3. What is (f − g)(x)?', opts:['x² + 2x − 4','x² − 2x − 4','x² − 2x + 2','−x² − 2x + 4']},
+  {n:53, text:'The operation (f / g)(x) is valid provided that:', opts:['f(x) ≠ 0','x ≠ 0','g(x) ≠ 0','f(x) = g(x)']},
+  {n:54, text:'The graph of an equation is the same as the graph of a function if it passes the:', opts:['Horizontal Line Test','Vertical Line Test','Domain Test','Range Test']},
+  {n:55, text:'What is the first step in finding the inverse of a function f(x)?', opts:['Interchange x and y','Solve for y','Replace f(x) by y','Verify the inverse']},
+  {n:56, text:'Find the inverse of f(x) = 2x − 3.', opts:['f⁻¹(x) = (x − 3) / 2','f⁻¹(x) = (x + 3) / 2','f⁻¹(x) = 2x + 3','f⁻¹(x) = x / 2 − 3']},
+  {n:57, text:'Find the inverse of f(x) = (8 − 5x) / 3.', opts:['f⁻¹(x) = (8 − 3x) / 5','f⁻¹(x) = (3x − 8) / 5','f⁻¹(x) = (8 + 3x) / 5','f⁻¹(x) = (5x − 8) / 3']},
+  {n:58, text:'What value is NOT in the domain of the function f(x) = 1 / (x + 3)?', opts:['3','0','−3','1']},
+  {n:59, text:'To verify that f(x) and f⁻¹(x) are inverses of each other, you must show that:', opts:['f(x) + f⁻¹(x) = 0','f(x) * f⁻¹(x) = 1','f(f⁻¹(x)) = x','f(x) / f⁻¹(x) = x']},
+  {n:60, text:'Determine whether the function f from A={1, 2, 3} into B={a, b, c} with f(1)=b, f(2)=c, f(3)=a is:', opts:['Injective only','Surjective only','Bijective','Not a function']},
+  /* ARGUMENTS */
+  {n:61, text:'A collection of propositions where it is claimed that the conclusion follows from the premises is called an:', opts:['Argument','Equation','Inference','Equivalence']},
+  {n:62, text:'An argument is logically valid if and only if (P1 ∧ P2 ∧ ... ∧ PN) → Q is a:', opts:['Contradiction','Contingency','Tautology','Fallacy']},
+  {n:63, text:'An argument where it is claimed that within a certain probability or error the conclusion follows from the premises is called a/an:', opts:['Deductive Argument','Valid Argument','Invalid Argument','Inductive Argument']},
+  {n:64, text:'An argument where it is claimed that the conclusion absolutely follows from the premises is called a/an:', opts:['Deductive Argument','Valid Argument','Invalid Argument','Inductive Argument']},
+  {n:65, text:'The Rule of Inference structured as: P → Q, P ∴ Q is known as:', opts:['Modus Tollens','Modus Ponens','Hypothetical Syllogism','Simplification']},
+  {n:66, text:'The Rule of Inference structured as: P → Q, ~Q ∴ ~P is known as:', opts:['Modus Tollens','Modus Ponens','Disjunctive Syllogism','Constructive Dilemma']},
+  {n:67, text:'The Rule of Inference structured as: P ∨ Q, ~P ∴ Q is known as:', opts:['Addition','Modus Tollens','Disjunctive Syllogism','Hypothetical Syllogism']},
+  {n:68, text:'The Rule of Inference structured as: P → Q, Q → R ∴ P → R is known as:', opts:['Constructive Dilemma','Disjunctive Syllogism','Simplification','Hypothetical Syllogism']},
+  {n:69, text:'The Rule of Inference structured as: P ∴ P ∨ Q is known as:', opts:['Simplification','Conjunction','Addition','Constructive Dilemma']},
+  {n:70, text:'The Rule of Inference structured as: P ∧ Q ∴ P is known as:', opts:['Simplification','Conjunction','Addition','Modus Ponens']},
+  {n:71, text:'The Rule of Inference (P → Q) ∧ (R → S), P ∨ R ∴ Q ∨ S corresponds to:', opts:['Destructive Dilemma','Constructive Dilemma','Conjunction','Modus Tollens']},
+  {n:72, text:'The Rule of Inference (P → Q) ∧ (R → S), ~Q ∨ ~S ∴ ~P ∨ ~R corresponds to:', opts:['Destructive Dilemma','Constructive Dilemma','Simplification','Disjunctive Syllogism']},
+  {n:73, text:'"If Paulo solved ten programming problems correctly then Paulo obtained a grade of 1.0. Paulo solved ten programming problems correctly. Therefore, Paulo obtained a grade of 1.0." This argument uses:', opts:['Modus Ponens','Modus Tollens','Addition','Simplification']},
+  {n:74, text:'"Today Marie has a VB class or a JAVA class or both. She does not have a VB class today. Therefore she must have a JAVA class today." This argument uses:', opts:['Hypothetical Syllogism','Destructive Dilemma','Disjunctive Syllogism','Constructive Dilemma']},
+  {n:75, text:'A formal proof of validity of an argument consists of lists of propositions which terminates with:', opts:['The Premise','The Conclusion (Q)','A Contradiction','A Rule of Inference']},
+  {n:76, text:'In the Method of Conditional Proof (CP), to begin the mini-proof, you must assume that the:', opts:['Consequent of the conclusion is true','Entire conclusion is false','Antecedent of the conclusion is true','First premise is false']},
+  {n:77, text:'In Predicate Logic Validation, the rule ∀x P(x) ∴ P(c) is called:', opts:['Universal Generalization (UG)','Existential Instantiation (EI)','Existential Generalization (EG)','Universal Instantiation (UI)']},
+  {n:78, text:'In Predicate Logic Validation, the rule P(c) for an arbitrary c ∴ ∀x P(x) is called:', opts:['Universal Generalization (UG)','Universal Instantiation (UI)','Existential Generalization (EG)','Existential Instantiation (EI)']},
+  {n:79, text:'In Predicate Logic Validation, the rule P(c) for some particular c ∴ ∃x P(x) is called:', opts:['Universal Generalization (UG)','Existential Instantiation (EI)','Existential Generalization (EG)','Universal Instantiation (UI)']},
+  {n:80, text:'Given the premises: 1. (M → P) ∧ (A → C) and 2. A. If we apply the rule of Simplification to Premise 1 to isolate A → C, and then use Premise 2, what conclusion can be derived using Modus Ponens?', opts:['P','M','P ∨ C','C']},
+];
+
+/* ── IAS DATA ── */
+const BLOOM_MAP_IAS = {
+  'Remembering':  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+  'Understanding':[17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],
+  'Applying':     [33,34,35,36,37,38,39,40],
+  'Analyzing':    [41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68],
+  'Evaluating':   [69,70,71,72,73,74,75,76,77,78,79,80]
+};
+
+const ANSWER_KEY_IAS = {
+  1:'A',2:'A',3:'A',4:'A',5:'B',6:'B',7:'A',8:'B',9:'B',10:'B',
+  11:'B',12:'B',13:'C',14:'B',15:'C',16:'C',
+  17:'B',18:'B',19:'B',20:'A',21:'B',22:'B',23:'B',24:'B',25:'D',26:'A',27:'B',28:'B',29:'B',30:'B',31:'B',32:'A',
+  33:'B',34:'B',35:'B',36:'B',37:'B',38:'A',39:'C',40:'B',
+  41:'A',42:'B',43:'B',44:'C',45:'B',46:'C',47:'B',48:'B',49:'C',50:'B',
+  51:'A',52:'B',53:'B',54:'B',55:'C',56:'B',57:'B',58:'B',59:'D',60:'B',
+  61:'A',62:'B',63:'B',64:'B',65:'B',66:'B',67:'B',68:'B',
+  69:'B',70:'B',71:'A',72:'B',73:'B',74:'B',75:'B',76:'A',77:'B',78:'A',79:'B',80:'B'
+};
+
+const ALL_QUESTIONS_IAS = [
+  /* REMEMBERING */
+  {n:1,  text:'Which component of PKI is responsible for verifying an entity\'s identity before a certificate is issued?', opts:['Registration Authority (RA)','Certificate Repository','End Entity','Validation Authority']},
+  {n:2,  text:'What is the standard format for a digital certificate?', opts:['X.509','PKCS#12','DER','PEM']},
+  {n:3,  text:'Which mathematical problem secures the Diffie-Hellman key exchange?', opts:['Discrete logarithm problem','Integer factorization','Elliptic curve discrete logarithm','Prime number sieve']},
+  {n:4,  text:'A hardware security module (HSM) is primarily used for which key lifecycle stage?', opts:['Storage','Generation only','Rotation only','Distribution']},
+  {n:5,  text:'In the AAA framework, which component enforces what a user can do after identity is verified?', opts:['Authentication','Authorization','Accounting','Auditing']},
+  {n:6,  text:'Which authentication factor is a hardware token like a YubiKey?', opts:['Something you know','Something you have','Something you are','Somewhere you are']},
+  {n:7,  text:'What is the primary purpose of a salt in password security?', opts:['To prevent rainbow table attacks','To encrypt the password','To increase password length','To store the password in plain text']},
+  {n:8,  text:'Which protocol uses XML-based assertions for single sign-on in enterprises?', opts:['OAuth 2.0','SAML','OpenID Connect','Kerberos']},
+  {n:9,  text:'In the four-part access control model, which component defines the resource being accessed?', opts:['Subject','Object','Action','Context']},
+  {n:10, text:'Which type of access control uses security labels like "Secret" and "Top Secret"?', opts:['DAC','MAC','RBAC','ABAC']},
+  {n:11, text:'The phase of access control that includes identification, authentication, and authorization execution is called?', opts:['Policy definition phase','Policy enforcement phase','Policy review phase','Policy audit phase']},
+  {n:12, text:'Which virtualization technology runs directly on hardware without a host operating system?', opts:['Type 2 hypervisor','Type 1 hypervisor','Container engine','Virtual Desktop Infrastructure']},
+  {n:13, text:'Which cloud service model gives the customer the most control over the underlying infrastructure?', opts:['SaaS','PaaS','IaaS','XaaS']},
+  {n:14, text:'What is the security mechanism that filters web traffic and blocks unauthorized access to cloud applications?', opts:['CASB','SWG','SASE','IDS']},
+  {n:15, text:'Which cloud location processes data near IoT devices to reduce latency?', opts:['On-premises','Off-premises','Fog computing','Serverless']},
+  {n:16, text:'An attack where a malicious process breaks out of a virtual machine to access the hypervisor is called?', opts:['VM sprawl','Hyperjacking','VM escape','Snapshot flaw']},
+  /* UNDERSTANDING */
+  {n:17, text:'Explain the role of a Certificate Authority (CA) in PKI.', opts:['It stores revoked certificates only','It signs digital certificates to bind a public key to an identity','It generates private keys for users','It performs encryption of all network traffic']},
+  {n:18, text:'How does Perfect Forward Secrecy (PFS) protect past sessions?', opts:['By using a static long-term key','By deriving each session key from a unique ephemeral key','By storing all session keys in an HSM','By rotating certificates daily']},
+  {n:19, text:'What does the "Validity Period" field in an X.509 certificate indicate?', opts:['The lifetime of the CA\'s private key','The time window during which the certificate is trustworthy','The time required to revoke the certificate','The expiration date of the subject\'s password']},
+  {n:20, text:'Summarize the key management principle of "rotation."', opts:['Replacing a key with a new one to limit blast radius','Storing keys in multiple locations','Sharing keys with all authorized users','Encrypting keys with a master key']},
+  {n:21, text:'Describe the Zero Trust model.', opts:['Trust everything inside the corporate perimeter','Assume the network is always hostile and never trust by default','Trust only devices with a digital certificate','Require biometrics for every login']},
+  {n:22, text:'What does the False Acceptance Rate (FAR) measure in biometrics?', opts:['Probability of rejecting a legitimate user','Probability of accepting an unauthorized user','Equal error rate','Speed of biometric matching']},
+  {n:23, text:'Interpret the function of an OAuth 2.0 access token.', opts:['It identifies the user\'s identity','It grants limited permission to a client application','It replaces the user\'s password','It encrypts the user\'s session']},
+  {n:24, text:'How does mutual TLS (mTLS) differ from standard TLS?', opts:['mTLS uses symmetric encryption only','Both client and server present digital certificates','mTLS eliminates the need for a CA','mTLS works only for web browsers']},
+  {n:25, text:'Classify the access control policy "Only HR managers can view salaries between 9 AM and 5 PM from the office network."', opts:['DAC','MAC','RBAC','ABAC']},
+  {n:26, text:'What is meant by "privilege creep"?', opts:['Gradual accumulation of access rights as employees change roles','A single user having too many passwords','Automated revocation of permissions','Attackers escalating privileges']},
+  {n:27, text:'Distinguish the policy definition phase from enforcement phase.', opts:['Definition phase logs actions; enforcement phase grants access','Definition phase sets rules; enforcement phase executes them','Definition phase uses biometrics; enforcement phase uses passwords','Both phases are identical']},
+  {n:28, text:'Explain the risk of VM sprawl.', opts:['Physical theft of servers','Uncontrolled proliferation of VMs leading to management and security issues','Hypervisor memory leaks','Virtual machine migration failures']},
+  {n:29, text:'What does Infrastructure as Code (IaC) achieve?', opts:['Manual configuration of cloud resources','Automated, code-based management of infrastructure','Physical replacement of servers','Encryption of all code repositories']},
+  {n:30, text:'Describe a Secure Access Service Edge (SASE).', opts:['A single antivirus product','A cloud-delivered combination of network security functions (SD-WAN, FWaaS)','A hardware firewall for on-premises data centers','An authentication protocol']},
+  {n:31, text:'How does a CASB enforce security between users and cloud providers?', opts:['By blocking all cloud traffic','By applying authentication, encryption, and threat protection policies','By replacing the cloud provider\'s native controls','By storing all data on-premises']},
+  {n:32, text:'What is the function of a transit gateway in cloud architecture?', opts:['To connect virtual private clouds and on-premises networks','To host serverless functions','To store thin client sessions','To perform edge computing']},
+  /* APPLYING */
+  {n:33, text:'A company needs to generate a certificate signing request (CSR) for its web server. Which component must the server administrator send to the CA?', opts:['The server\'s private key','The server\'s public key and identity information','The CA\'s root certificate','A random salt']},
+  {n:34, text:'An organization wants to ensure that past encrypted communications remain secure even if the current private key is stolen. Which key exchange method should be implemented?', opts:['Static RSA key transport','Ephemeral Diffie-Hellman (DHE)','Pre-shared symmetric key','Plaintext exchange']},
+  {n:35, text:'A developer is building a mobile app that needs to request read-only access to a user\'s Google Drive files without obtaining the user\'s password. Which OAuth 2.0 element defines this limited access?', opts:['Refresh token','Scope','Authorization code','Client secret']},
+  {n:36, text:'A bank requires two employees to simultaneously insert their smart cards to authorize a large wire transfer. Which security principle is being applied?', opts:['Separation of duties','Dual control','Least privilege','Privilege creep']},
+  {n:37, text:'A security analyst notices that many virtual machines have been created over the past year and are no longer used. What action directly mitigates VM sprawl?', opts:['Deploy a Type 2 hypervisor','Decommission unused VMs after an audit','Increase RAM allocation','Enable snapshotting']},
+  {n:38, text:'An administrator wants to isolate network traffic between microservices running in containers. Which technology enables programmatic network management for this purpose?', opts:['Software-Defined Networking (SDN)','Virtual Desktop Infrastructure (VDI)','Type 1 hypervisor','Secure Web Gateway']},
+  {n:39, text:'A small business uses a public cloud for its website but keeps sensitive customer data on-premises. Which cloud deployment model is being used?', opts:['Public cloud','Private cloud','Hybrid cloud','Community cloud']},
+  {n:40, text:'A cloud engineer needs to automatically scale computing resources based on real-time demand. Which cloud characteristic provides this?', opts:['Broad network access','Rapid elasticity','Resource pooling','Measured service']},
+  /* ANALYZING */
+  {n:41, text:'Compare the roles of an IdP and an SP in SAML federation. Which statement is true?', opts:['IdP holds the user\'s credentials; SP provides the service','SP holds credentials; IdP provides service','Both act as CAs','Neither handles authentication']},
+  {n:42, text:'Differentiate between hashing and encryption. What is a key distinction?', opts:['Hashing is reversible; encryption is not','Hashing produces a fixed-length output; encryption produces variable-length output','Hashing uses keys; encryption does not','Hashing is for confidentiality; encryption is for integrity']},
+  {n:43, text:'Analyze why a password database should use a unique salt per password.', opts:['To ensure all passwords have same hash','To prevent an attacker from using a single rainbow table against all hashes','To make passwords longer','To store passwords in plain text']},
+  {n:44, text:'Break down the difference between a CRL and OCSP. CRL\'s main limitation is:', opts:['Cannot revoke certificates','Real-time check is impossible','Periodic publishing introduces latency','Requires client to send private key']},
+  {n:45, text:'Examine how Kerberos uses a ticket-granting ticket (TGT). What is its purpose?', opts:['To encrypt the user\'s password','To allow the user to request service tickets without re-entering credentials','To replace the need for a KDC','To perform mutual authentication with the browser']},
+  {n:46, text:'Distinguish between Type 1 and Type 2 hypervisors. Which characteristic is unique to Type 1?', opts:['Runs on top of a host OS','Requires hardware virtualization support','Runs directly on bare metal','Used only for containers']},
+  {n:47, text:'Compare fog computing and edge computing. Which statement correctly differentiates them?', opts:['Fog processes data near IoT devices; edge processes data at the cloud core','Edge processes data near the source; fog acts as an intermediate layer','Fog requires serverless; edge requires virtualization','Both are identical']},
+  {n:48, text:'Analyze a scenario where a user logs in from Manila and then 10 minutes later from New York. Adaptive authentication flags this as:', opts:['Normal travel pattern','Impossible travel, triggering additional MFA','Valid session reuse','Password reset required']},
+  {n:49, text:'Break down the anatomy of a JWT used in OpenID Connect. Which part contains the user\'s identity claims?', opts:['Header','Signature','Payload','Footer']},
+  {n:50, text:'Compare the security responsibility between IaaS and PaaS. In IaaS, who is responsible for patching the guest operating system?', opts:['The cloud provider','The customer','Both equally','No one']},
+  {n:51, text:'Differentiate between a VM escape and hyperjacking. VM escape targets:', opts:['The hypervisor from a guest VM','The management console','The virtual switch','The storage backend']},
+  {n:52, text:'Analyze why short-lived JWTs (5 minutes) without refresh tokens cause usability issues.', opts:['Tokens become too large','Users must re-authenticate frequently','JWTs cannot be signed','Tokens are invalid after one use']},
+  {n:53, text:'Examine the effect of scope creep in OAuth 2.0. What principle does it violate?', opts:['Separation of duties','Least privilege','Defense in depth','Non-repudiation']},
+  {n:54, text:'Compare DAC and MAC. In which model does the resource owner have discretion to grant access?', opts:['MAC','DAC','RBAC','ABAC']},
+  {n:55, text:'Break down the four components of an access control policy: Subject, Object, Action, Context. Which component specifies the operation (e.g., read, write)?', opts:['Subject','Object','Action','Context']},
+  {n:56, text:'Analyze how separation of duties prevents internal fraud.', opts:['One person does all tasks','Two people must collude to complete a high-risk transaction','Single approval is enough','Only managers have access']},
+  {n:57, text:'Compare containers and virtual machines. Which is a true statement?', opts:['Containers have their own guest OS; VMs share host kernel','VMs have their own guest OS; containers share host OS kernel','Containers require a hypervisor; VMs do not','VMs are less isolated than containers']},
+  {n:58, text:'Examine why SMS is considered a weak second factor for MFA.', opts:['It is too fast','It is vulnerable to SIM swapping attacks','It requires a hardware token','It uses public key cryptography']},
+  {n:59, text:'Break down the IAM maturity model. Level 4 is characterized by:', opts:['Passwords only','MFA on some systems','SSO across all apps','Zero Trust architecture with AI-driven anomaly detection']},
+  {n:60, text:'Differentiate between the "Subject" and "Object" in access control.', opts:['Subject is the resource; Object is the user','Subject is the user/process; Object is the resource','Both are the same','Subject is the action; Object is the context']},
+  {n:61, text:'Analyze a federated SSO deployment where the IdP does not enforce MFA. Consequence for SPs?', opts:['Each SP can override and enforce its own MFA','No SP can enforce MFA because authentication is delegated','SPs automatically apply MFA','Passwords become optional']},
+  {n:62, text:'Distinguish between a snapshot attack and VM escape. A snapshot flaw exposes:', opts:['Hypervisor code','Saved VM state potentially containing secrets','Network configuration','Container runtime']},
+  {n:63, text:'Compare SD-WAN and SDN. SD-WAN optimizes:', opts:['Data center internal traffic','Wide-area network connectivity','Virtual machine migration','Storage area networks']},
+  {n:64, text:'Examine the risk of using a single-factor password for online banking. Which security control is missing?', opts:['Separation of duties','Multi-factor authentication','Role-based access','Non-repudiation']},
+  {n:65, text:'Break down the X.509 certificate fields. Which field contains the name of the CA that issued the certificate?', opts:['Subject','Issuer','Serial Number','Validity Period']},
+  {n:66, text:'Analyze how a hardware security module (HSM) improves key storage over software storage.', opts:['HSM is slower but cheaper','HSM provides tamper-resistant physical protection','HSM stores keys in plain text','HSM eliminates the need for keys']},
+  {n:67, text:'Differentiate between OAuth 2.0 and OpenID Connect. OIDC adds:', opts:['Authorization framework','Identity layer with ID token','XML signatures','Hardware token support']},
+  {n:68, text:'Examine the statement: "SAML is more secure than OIDC because it uses XML signatures." Is this justified?', opts:['Yes, XML signatures are inherently stronger','No, both can be secure; security depends on implementation, not format','Yes, because OIDC has no signatures','No, because SAML is deprecated']},
+  /* EVALUATING */
+  {n:69, text:'Judge a PKI deployment where the CA\'s private key is stored on a general-purpose server without an HSM. What is the most critical risk?', opts:['Slow certificate issuance','Compromise of the CA\'s private key, breaking trust for all certificates','Increased network latency','Inability to revoke certificates']},
+  {n:70, text:'Assess the claim: "Perfect Forward Secrecy is unnecessary if you rotate keys every day." Is this correct?', opts:['Yes, daily rotation eliminates the need for PFS','No, PFS protects past sessions even if long-term key is compromised before rotation','Yes, because rotation makes ephemeral keys irrelevant','No, but only for RSA']},
+  {n:71, text:'Critique a biometric system with a very low False Rejection Rate (FRR) but high False Acceptance Rate (FAR). What is the security implication?', opts:['System is highly usable but insecure','System is highly secure but unusable','System is optimal','System cannot be configured']},
+  {n:72, text:'Evaluate an IAM process where HR does not automatically trigger account deprovisioning upon employee termination. What is the highest risk?', opts:['Increased help desk tickets','Ghost accounts that former employees can exploit','Higher cloud costs','Slower login times']},
+  {n:73, text:'Judge an organization\'s decision to use OAuth 2.0 without OpenID Connect for user login. What critical functionality is missing?', opts:['Ability to issue access tokens','Standardized way to obtain user identity claims','Support for refresh tokens','Encryption of client secrets']},
+  {n:74, text:'Assess a security policy that allows all employees full read/write access to all files. Which access control principle is violated?', opts:['Separation of duties','Least privilege','Dual control','Non-repudiation']},
+  {n:75, text:'Evaluate the following cloud architecture: A single public cloud tenant hosts multiple competing companies with no network isolation. Which vulnerability is most critical?', opts:['VM escape','Multi-tenancy data leakage','VM sprawl','Snapshot flaws']},
+  {n:76, text:'Critique the use of a Type 2 hypervisor in a production data center hosting sensitive workloads. What is the main drawback?', opts:['Lower performance and increased attack surface due to host OS','Lack of hardware virtualization support','No isolation between VMs','Cannot run Linux guests']},
+  {n:77, text:'Judge a company\'s plan to use only Infrastructure as Code (IaC) without any manual review. What risk remains?', opts:['Physical hardware failure','Misconfigurations coded into IaC that pass automated tests','Hypervisor vulnerabilities','Lack of scalability']},
+  {n:78, text:'Assess a cloud provider\'s claim that "serverless infrastructure is completely secure because the provider manages everything." What is a valid counterargument?', opts:['Serverless functions still have application-level vulnerabilities','Serverless eliminates all code','Serverless cannot be monitored','Serverless does not use encryption']},
+  {n:79, text:'Evaluate the use of a single long-lived JWT stored in local storage for a web application. What is the primary security weakness?', opts:['JWT cannot be revoked','JWT is vulnerable to XSS token theft','JWT is too short','JWT lacks signature']},
+  {n:80, text:'Critique a virtualization security strategy that relies solely on patching the hypervisor but ignores VM sprawl. What attack vector remains unmitigated?', opts:['Hyperjacking','Unmanaged, outdated VMs accumulating vulnerabilities','VM escape through hypervisor bugs','Snapshot extraction']},
+];
+
+let BLOOM_MAP = BLOOM_MAP_FDS;
+let ANSWER_KEY = ANSWER_KEY_FDS;
+
+const SECTION_LABELS_FDS = {
   Remembering:'Remembering', Understanding:'Understanding',
   Applying:'Applying', Analyzing:'Analyzing', Evaluating:'Evaluating'
 };
+const SECTION_LABELS_DS1 = {
+  'Set Theory':'Set Theory', 'Relations':'Relations',
+  'Functions':'Functions', 'Arguments':'Arguments'
+};
+const SECTION_LABELS_IAS = {
+  'Remembering':'Remembering', 'Understanding':'Understanding',
+  'Applying':'Applying', 'Analyzing':'Analyzing', 'Evaluating':'Evaluating'
+};
+let SECTION_LABELS = SECTION_LABELS_FDS;
 
 function getSectionForNum(n) {
   for (const [sec, nums] of Object.entries(BLOOM_MAP)) {
@@ -1116,7 +1360,16 @@ function shuffle(arr) {
 }
 
 function startExam() {
-  state.questions = state.shuffle ? shuffle(ALL_QUESTIONS) : [...ALL_QUESTIONS];
+  const id = state.subject.id;
+  if (id === 'fds') {
+    BLOOM_MAP = BLOOM_MAP_FDS; ANSWER_KEY = ANSWER_KEY_FDS; SECTION_LABELS = SECTION_LABELS_FDS;
+  } else if (id === 'ds1') {
+    BLOOM_MAP = BLOOM_MAP_DS1; ANSWER_KEY = ANSWER_KEY_DS1; SECTION_LABELS = SECTION_LABELS_DS1;
+  } else {
+    BLOOM_MAP = BLOOM_MAP_IAS; ANSWER_KEY = ANSWER_KEY_IAS; SECTION_LABELS = SECTION_LABELS_IAS;
+  }
+  const questionsPool = id === 'fds' ? ALL_QUESTIONS : id === 'ds1' ? ALL_QUESTIONS_DS1 : ALL_QUESTIONS_IAS;
+  state.questions = state.shuffle ? shuffle(questionsPool) : [...questionsPool];
   state.current = 0;
   state.answers = {};
   state.correctCount = 0;
