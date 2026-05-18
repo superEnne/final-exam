@@ -589,6 +589,12 @@
   }
   .quiz-body { animation: fadeIn 0.25s ease both; }
 
+  /* ─── TOUCH OPTIMIZATIONS (all sizes) ─── */
+  button, .subject-card, .opt, .config-option, .q-dot {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
   /* ─── EXIT MODAL ─── */
   .exit-modal-overlay {
     display: none;
@@ -643,10 +649,177 @@
   .exit-confirm { background: var(--red-dark); border: 1px solid var(--red-dark); color: var(--text); }
   .exit-confirm:hover { background: var(--red); border-color: var(--red); }
 
+  /* ─── MOBILE ─── */
   @media (max-width: 640px) {
-    .topbar, .quiz-progress, .quiz-body, .subjects-hero, .subjects-grid, .config-body, .summary-body { padding-left: 20px; padding-right: 20px; }
+
+    /* ── Topbar ── */
+    .topbar { padding: 13px 16px; }
+    .brand { font-size: 0.88rem; }
+    .brand span { display: none; }
+    .ghost-btn { padding: 9px 13px; font-size: 0.6rem; letter-spacing: 0.08em; }
+
+    /* ── Subject selection ── */
+    .subjects-hero { padding: 32px 16px 20px; }
+    .subjects-hero h1 { font-size: clamp(1.9rem, 9vw, 2.6rem); }
+    .subjects-hero p { font-size: 0.76rem; }
+    .subjects-grid { padding: 12px 16px 64px; grid-template-columns: 1fr; gap: 11px; }
+    .subject-card { padding: 20px 16px; }
+    .sc-title { font-size: 1.15rem; }
+    .sc-desc { font-size: 0.68rem; margin-bottom: 16px; }
+
+    /* ── Config ── */
+    .config-body { padding: 28px 16px 40px; }
+    .config-body h2 { font-size: 1.75rem; }
+    .back-link { margin-bottom: 24px; min-height: 44px; }
+    .config-option { padding: 18px 16px; min-height: 64px; }
+    .config-opt-title { font-size: 0.9rem; }
+    .start-btn { padding: 18px; font-size: 0.84rem; margin-top: 28px; border-radius: 4px; }
+
+    /* ── Progress bar ── */
+    .quiz-progress { padding: 0 16px; }
+    .qp-row { padding: 11px 0; gap: 10px; }
+    .qp-label { font-size: 0.58rem; }
+    .qp-score { font-size: 0.65rem; }
+
+    /* ── Quiz body — extra bottom so content clears the fixed nav ── */
+    .quiz-body { padding: 22px 16px 110px; }
+
+    /* ── Question header ── */
+    .q-counter { font-size: 0.58rem; margin-bottom: 12px; }
+    .q-section-badge { font-size: 0.55rem; margin-bottom: 11px; }
+    .q-text { font-size: 0.88rem; line-height: 1.72; margin-bottom: 18px; }
+
+    /* ── Data table — compact + horizontal scroll hint ── */
+    .q-table-wrap {
+      margin-bottom: 14px;
+      border-radius: 3px;
+      box-shadow: inset -16px 0 12px -12px rgba(0,0,0,0.55);
+    }
+    .q-table { font-size: 0.6rem; min-width: 520px; }
+    .q-table th { padding: 5px 7px; font-size: 0.52rem; white-space: nowrap; }
+    .q-table td { padding: 5px 7px; white-space: nowrap; }
+
+    /* ── FD list ── */
+    .q-fd ul { padding: 10px 14px; gap: 5px; }
+    .q-fd li { font-size: 0.65rem; }
+
+    /* ── Answer options — big tap targets ── */
+    .opts-grid { gap: 8px; margin-bottom: 18px; }
+    .opt {
+      padding: 15px 13px;
+      font-size: 0.79rem;
+      min-height: 54px;
+      gap: 12px;
+      align-items: center;
+    }
+    .opt-letter {
+      min-width: 30px;
+      height: 30px;
+      font-size: 0.62rem;
+      border-radius: 3px;
+    }
+
+    /* ── Feedback ── */
+    .q-feedback {
+      font-size: 0.71rem;
+      padding: 11px 13px;
+      margin-bottom: 16px;
+      border-radius: 3px;
+    }
+
+    /* ── Bottom nav — fixed sticky bar ── */
+    .q-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10,4,3,0.97);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+      gap: 10px;
+      z-index: 50;
+    }
     .q-dot-row { display: none; }
-    .subjects-hero h1 { font-size: 2rem; }
+    .nav-btn {
+      flex: 1;
+      padding: 13px 12px;
+      font-size: 0.64rem;
+      letter-spacing: 0.08em;
+      min-height: 46px;
+    }
+
+    /* ── Summary ── */
+    .summary-body { padding: 28px 16px 56px; }
+    .summary-body h2 { font-size: clamp(1.65rem, 8vw, 2.4rem); }
+    .summary-sub { margin-bottom: 24px; }
+
+    .grade-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 20px 18px;
+    }
+    .grade-letter { font-size: 3.6rem; }
+    .grade-info .g-title { font-size: 0.95rem; }
+    .grade-info .g-desc { font-size: 0.7rem; }
+
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 22px; }
+    .stat-box { padding: 16px 14px; }
+    .stat-box .sval { font-size: 1.6rem; }
+
+    .bloom-section { margin-bottom: 22px; }
+    .bloom-row { gap: 8px; }
+    .bloom-row .bl { width: 76px; font-size: 0.63rem; }
+
+    .review-section { margin-bottom: 28px; }
+    .review-item { padding: 13px 14px; }
+    .review-item .ri-top { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .ri-tags { flex-wrap: wrap; gap: 5px; }
+    .ri-q { font-size: 0.7rem; }
+
+    .summary-actions { flex-direction: column; gap: 9px; }
+    .action-btn { width: 100%; text-align: center; padding: 16px; font-size: 0.78rem; }
+
+    /* ── Exit modal — bottom sheet on mobile ── */
+    .exit-modal-overlay { align-items: flex-end; }
+    .exit-modal {
+      max-width: 100%;
+      width: 100%;
+      border-radius: 14px 14px 0 0;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      padding: 30px 20px;
+      padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+      animation: slideUp 0.25s cubic-bezier(0.32,0.72,0,1) both;
+    }
+    .exit-modal h3 { font-size: 1.5rem; }
+    .exit-modal p { font-size: 0.76rem; margin-bottom: 24px; }
+    .exit-modal-btns { flex-direction: column-reverse; gap: 8px; }
+    .exit-modal-btns button {
+      width: 100%;
+      padding: 15px;
+      text-align: center;
+      font-size: 0.72rem;
+      min-height: 50px;
+    }
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0.6; }
+    to   { transform: translateY(0);    opacity: 1;   }
+  }
+
+  /* ── Very small phones ── */
+  @media (max-width: 380px) {
+    .opt { font-size: 0.74rem; padding: 13px 11px; }
+    .q-text { font-size: 0.82rem; }
+    .grade-letter { font-size: 3rem; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .stat-box .sval { font-size: 1.4rem; }
   }
 </style>
 </head>
