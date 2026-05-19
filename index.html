@@ -599,6 +599,97 @@
   .action-btn.secondary { background: none; border: 1px solid var(--border); color: var(--text-dim); }
   .action-btn.secondary:hover { border-color: var(--red); color: var(--text); }
 
+  /* ─── PRAYER SCREEN ─── */
+  #screen-prayer { justify-content: flex-start; }
+  .prayer-body {
+    padding: 60px 48px 80px;
+    max-width: 720px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .prayer-body h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 6px; }
+  .prayer-body h2 em { color: var(--red-light); font-style: italic; }
+  .prayer-sub { color: var(--text-muted); font-size: 0.78rem; font-weight: 300; margin-bottom: 36px; line-height: 1.6; }
+
+  .prayer-section-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .prayer-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .verse-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 22px 24px;
+    background: var(--surface);
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .verse-card::before {
+    content: '"';
+    position: absolute;
+    top: -8px; left: 14px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 5rem;
+    color: var(--red-deep);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .verse-card:hover { border-color: var(--red-dark); }
+  .verse-text {
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: var(--text);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 10px;
+    padding-top: 6px;
+  }
+  .verse-ref {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red-light);
+  }
+
+  .prayer-block {
+    border: 1px solid var(--red-deep);
+    border-radius: 4px;
+    padding: 28px 28px;
+    background: rgba(192,57,43,0.04);
+    margin-bottom: 10px;
+  }
+  .prayer-block p {
+    font-size: 0.86rem;
+    line-height: 2;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+  .prayer-block p + p { margin-top: 12px; }
+  .prayer-block .prayer-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .prayer-body { padding: 28px 16px 56px; }
+    .prayer-body h2 { font-size: clamp(1.65rem, 8vw, 2.4rem); }
+    .verse-card { padding: 18px 16px; }
+    .verse-text { font-size: 0.82rem; }
+    .prayer-block { padding: 20px 16px; }
+    .prayer-block p { font-size: 0.8rem; }
+  }
+
   /* ─── ANIMATIONS ─── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(14px); }
@@ -854,6 +945,9 @@
 <div class="screen active" id="screen-subjects">
   <div class="topbar">
     <div class="brand">ExamPortal <span>Practice Examination Platform</span></div>
+    <div class="topbar-right">
+      <button class="ghost-btn" onclick="goTo('screen-prayer')">🙏 Prayer</button>
+    </div>
   </div>
   <div class="subjects-hero">
     <div class="eyebrow">Select a Subject</div>
@@ -881,6 +975,14 @@
         <div class="config-opt-desc">Randomize the order of questions each session</div>
       </div>
       <div class="toggle" id="toggle-shuffle"></div>
+    </div>
+
+    <div class="config-option" id="cfg-hints" onclick="toggleHints()" style="display:none">
+      <div class="config-opt-info">
+        <div class="config-opt-title">Show Hints</div>
+        <div class="config-opt-desc">Display hints for Identification &amp; Enumeration questions</div>
+      </div>
+      <div class="toggle on" id="toggle-hints"></div>
     </div>
 
     <button class="start-btn" onclick="startExam()">Begin Exam →</button>
@@ -911,6 +1013,98 @@
     <div class="brand">ExamPortal <span>Results</span></div>
   </div>
   <div class="summary-body" id="summary-body"></div>
+</div>
+
+<!-- ════════════════════ PRAYER ════════════════════ -->
+<div class="screen" id="screen-prayer">
+  <div class="topbar">
+    <div class="brand">ExamPortal <span>Prayer &amp; Scripture</span></div>
+    <div class="topbar-right">
+      <button class="ghost-btn" onclick="goTo('screen-subjects')">← Back</button>
+    </div>
+  </div>
+  <div class="prayer-body">
+    <div class="eyebrow">Before You Begin</div>
+    <h2>Prayer &amp; <em>Scripture</em></h2>
+    <p class="prayer-sub">Take a moment to still your heart. God grants wisdom generously to those who ask. These verses and prayers are here to remind you that you do not face this exam alone.</p>
+
+    <div class="prayer-section-title">A Prayer Before Your Exam</div>
+    <div class="prayer-block">
+      <div class="prayer-title">Lord, Grant Me Wisdom</div>
+      <p>Heavenly Father, I come before You in humility, trusting that You are the source of all wisdom and understanding. As I prepare to take this exam, calm my anxious mind and steady my hands. Let the knowledge I have studied return to me clearly and in the right moment.</p>
+      <p>May I not rely solely on my own strength, but lean on You — the God who gives wisdom generously to all who ask. Clear away fear and confusion, and replace them with Your peace that surpasses all understanding.</p>
+      <p>I surrender the outcome to You, Lord. Whether I do well or face difficulty, let this experience draw me closer to You. Let my efforts honor You. Guide my mind, guard my heart, and be glorified in all I do today.</p>
+      <p>In Jesus' name, Amen.</p>
+    </div>
+
+    <div class="prayer-section-title">Verses on Wisdom &amp; Knowledge</div>
+
+    <div class="verse-card">
+      <div class="verse-text">For the Lord gives wisdom; from his mouth come knowledge and understanding.</div>
+      <div class="verse-ref">Proverbs 2:6</div>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-text">If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault, and it will be given to you.</div>
+      <div class="verse-ref">James 1:5</div>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-text">Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.</div>
+      <div class="verse-ref">Proverbs 3:5–6</div>
+    </div>
+
+    <div class="prayer-section-title">Verses on Strength &amp; Courage</div>
+
+    <div class="verse-card">
+      <div class="verse-text">I can do all this through him who gives me strength.</div>
+      <div class="verse-ref">Philippians 4:13</div>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-text">For God has not given us a spirit of fear, but of power and of love and of a sound mind.</div>
+      <div class="verse-ref">2 Timothy 1:7</div>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-text">Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.</div>
+      <div class="verse-ref">Joshua 1:9</div>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-text">But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.</div>
+      <div class="verse-ref">Isaiah 40:31</div>
+    </div>
+
+    <div class="prayer-section-title">Verses on Peace &amp; Trust</div>
+
+    <div class="verse-card">
+      <div class="verse-text">Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus.</div>
+      <div class="verse-ref">Philippians 4:6–7</div>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-text">God is our refuge and strength, an ever-present help in trouble.</div>
+      <div class="verse-ref">Psalm 46:1</div>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-text">Cast all your anxiety on him because he cares for you.</div>
+      <div class="verse-ref">1 Peter 5:7</div>
+    </div>
+
+    <div class="prayer-section-title">A Short Prayer After Your Exam</div>
+    <div class="prayer-block">
+      <div class="prayer-title">Thank You, Lord</div>
+      <p>Father, I thank You for carrying me through this exam. I gave my best, and I trust the rest to You. Whatever the result, I know that You work all things together for good for those who love You.</p>
+      <p>Help me find peace in Your faithfulness, not in a score. May I continue to grow in diligence and wisdom — not only for exams, but for a life that glorifies You. Thank You for being with me every step of the way.</p>
+      <p>In Jesus' name, Amen.</p>
+    </div>
+
+    <div style="margin-top:36px;">
+      <button class="action-btn primary" onclick="goTo('screen-subjects')">← Back to Subjects</button>
+    </div>
+  </div>
 </div>
 
 <!-- ════════════════════ EXIT MODAL ════════════════════ -->
@@ -1521,6 +1715,7 @@ const ALL_QUESTIONS = [
 let state = {
   subject: null,
   shuffle: false,
+  showHints: true,
   questions: [],
   current: 0,
   answers: {},   // index → chosen letter
@@ -1565,6 +1760,20 @@ function selectSubject(sub) {
   state.subject = sub;
   document.getElementById('cfg-title').innerHTML = `Exam <em>Settings</em>`;
   document.getElementById('cfg-sub').textContent = `${sub.title} — ${sub.items} questions`;
+
+  // Show hints toggle only for PT subject
+  const hintsRow = document.getElementById('cfg-hints');
+  const hintsToggle = document.getElementById('toggle-hints');
+  if (sub.id === 'pt') {
+    hintsRow.style.display = 'flex';
+    state.showHints = true;
+    hintsToggle.classList.add('on');
+    hintsRow.classList.add('active');
+  } else {
+    hintsRow.style.display = 'none';
+    state.showHints = true; // reset to default
+  }
+
   goTo('screen-config');
 }
 
@@ -1577,6 +1786,14 @@ function toggleShuffle() {
   const opt = document.getElementById('cfg-shuffle');
   t.classList.toggle('on', state.shuffle);
   opt.classList.toggle('active', state.shuffle);
+}
+
+function toggleHints() {
+  state.showHints = !state.showHints;
+  const t = document.getElementById('toggle-hints');
+  const opt = document.getElementById('cfg-hints');
+  t.classList.toggle('on', state.showHints);
+  opt.classList.toggle('active', state.showHints);
 }
 
 function shuffle(arr) {
@@ -1700,7 +1917,7 @@ function renderCurrentQuestion() {
     html += `</div>`;
   } else {
     /* ── ID / ENUM text-input layout ── */
-    if (q.hint && !alreadyAnswered) {
+    if (q.hint && !alreadyAnswered && state.showHints) {
       html += `<div class="q-hint">💡 ${q.hint}</div>`;
     }
     if (!alreadyAnswered) {
