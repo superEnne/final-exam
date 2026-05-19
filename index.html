@@ -350,6 +350,20 @@
     margin-bottom: 14px;
   }
 
+  .q-part-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    border: 1px solid #6d28d966;
+    background: #6d28d911;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+    margin-left: 6px;
+  }
+
   .q-text {
     font-size: 0.95rem;
     line-height: 1.75;
@@ -371,6 +385,17 @@
 
   /* Options */
   .opts-grid { display: flex; flex-direction: column; gap: 9px; margin-bottom: 28px; }
+  /* ── ID / ENUM input styles ── */
+  .q-hint { font-size:0.78rem; color:var(--text2); background:var(--surface2); border-left:3px solid var(--accent); padding:8px 12px; border-radius:6px; margin-bottom:14px; }
+  .id-input-wrap { display:flex; gap:8px; margin-bottom:20px; align-items:center; }
+  .id-input { flex:1; background:var(--surface2); border:1.5px solid var(--border); color:var(--text1); font-size:0.9rem; padding:10px 14px; border-radius:10px; outline:none; transition:border-color .2s; }
+  .id-input:focus { border-color:var(--accent); }
+  .id-submit-btn { background:var(--accent); color:#fff; border:none; padding:10px 18px; border-radius:10px; font-size:0.82rem; font-weight:600; cursor:pointer; white-space:nowrap; transition:opacity .2s; }
+  .id-submit-btn:hover { opacity:.85; }
+  .id-input-wrap.answered { display:block; margin-bottom:20px; }
+  .id-your-ans { font-size:0.88rem; display:block; padding:10px 14px; border-radius:10px; border:1.5px solid; }
+  .id-your-ans.id-correct { background:var(--correct-bg,#14532d22); border-color:var(--correct,#22c55e); color:var(--correct,#22c55e); }
+  .id-your-ans.id-wrong { background:var(--wrong-bg,#7f1d1d22); border-color:var(--wrong,#ef4444); color:var(--wrong,#ef4444); }
   .opt {
     display: flex;
     align-items: flex-start;
@@ -931,6 +956,15 @@ const SUBJECTS = [
     chapters: 'Modules 4–7',
     items: 80,
     bloom: 5,
+  },
+  {
+    id: 'pt',
+    code: 'PT',
+    title: 'Platform Technologies',
+    desc: 'Covers system administration, virtualization, and client-server architecture. Includes MC, Identification, and Enumeration.',
+    chapters: 'Ch. 4 · Ch. 5 · Ch. 6',
+    items: 80,
+    bloom: 3,
   }
 ];
 
@@ -1166,8 +1200,198 @@ const ALL_QUESTIONS_IAS = [
   {n:80, text:'Critique a virtualization security strategy that relies solely on patching the hypervisor but ignores VM sprawl. What attack vector remains unmitigated?', opts:['Hyperjacking','Unmanaged, outdated VMs accumulating vulnerabilities','VM escape through hypervisor bugs','Snapshot extraction']},
 ];
 
-let BLOOM_MAP = BLOOM_MAP_FDS;
-let ANSWER_KEY = ANSWER_KEY_FDS;
+/* ══════════════════════════════════════════════════
+   PT — PLATFORM TECHNOLOGIES DATA
+═══════════════════════════════════════════════════ */
+const BLOOM_MAP_PT = {
+  'System Admin':    [1,2,3,4,5,6,7,8,9,10,31,32,33,34,35,36,37,38,39,40,61,62,63,64,65,66,67],
+  'Virtualization':  [11,12,13,14,15,16,17,18,19,20,41,42,43,44,45,46,47,48,49,50,68,69,70,71,72,73,77,78],
+  'Client-Server':   [21,22,23,24,25,26,27,28,29,30,51,52,53,54,55,56,57,58,59,60,74,75,76,79,80]
+};
+
+/* PT answer key — letters for MC (1-30), strings for ID (31-60), strings for ENUM (61-80)
+   CORRECTIONS from PDF key: Q15 a→c, Q16 a→b, Q18 b→a, Q41 "Host"→"Virtualization" */
+const ANSWER_KEY_PT = {
+  /* MC */
+  1:'A',2:'C',3:'C',4:'B',5:'C',6:'A',7:'C',8:'B',9:'B',10:'A',
+  11:'B',12:'C',13:'D',14:'B',15:'C',16:'B',17:'A',18:'A',19:'B',20:'C',
+  21:'D',22:'A',23:'B',24:'B',25:'A',26:'C',27:'B',28:'D',29:'A',30:'B',
+  /* Identification */
+  31:'system',
+  32:'system administrator',
+  33:'crud',
+  34:'usage policy',
+  35:'service level agreement',
+  36:'request tracking system',
+  37:'root cause',
+  38:'privacy policy',
+  39:'midsized site',
+  40:'documenting',
+  41:'virtualization',
+  42:'guest',
+  43:'hypervisor',
+  44:'application virtualization',
+  45:'resource pooling',
+  46:'live migration',
+  47:'desktop virtualization',
+  48:'paas',
+  49:'faster vm deployment',
+  50:'data centers',
+  51:'client',
+  52:'server',
+  53:'message queue',
+  54:'server bottleneck',
+  55:'application layer',
+  56:'presentation layer',
+  57:'thin client',
+  58:'acid properties',
+  59:'big compute architecture',
+  60:'atm',
+  /* Enumeration */
+  61:'create',
+  62:'read',
+  63:'update',
+  64:'delete',
+  65:'small site',
+  66:'midsized site',
+  67:'large site',
+  68:'server virtualization',
+  69:'desktop virtualization',
+  70:'storage virtualization',
+  71:'type 0 hypervisor',
+  72:'type 1 hypervisor',
+  73:'type 2 hypervisor',
+  74:'presentation logic',
+  75:'business logic',
+  76:'database logic',
+  77:'faster vm deployment',
+  78:'standardized configurations',
+  79:'fat client',
+  80:'thin client',
+};
+
+/* Accepted aliases for fuzzy matching on ID/ENUM items */
+const PT_ALIASES = {
+  32: ['sysadmin','system admin','sys admin'],
+  35: ['sla'],
+  36: ['ticketing system','ticket system'],
+  40: ['resisting','documenting requests'],
+  41: ['virtualization concept'],
+  43: ['vmm'],
+  46: ['suspend/resume','suspend and resume'],
+  48: ['platform as a service'],
+  50: ['data centre','datacenters','data centre'],
+  52: ['host server'],
+  55: ['business logic layer','application logic','business logic'],
+  56: ['presentation tier','ui layer'],
+  57: ['dumb terminal','dummy terminal'],
+  58: ['acid','transaction'],
+  60: ['automated teller machine','atm machine'],
+  65: ['small'],
+  66: ['midsized','mid-sized site','mid sized site'],
+  67: ['large'],
+  68: ['server virt'],
+  69: ['desktop virt'],
+  70: ['storage virt'],
+  71: ['type 0','type0'],
+  72: ['type 1','type1'],
+  73: ['type 2','type2'],
+  74: ['presentation','presentation layer','presentation tier'],
+  75: ['application logic','business layer','application layer','business/application logic'],
+  76: ['data layer','database layer','data logic','db logic'],
+  77: ['fast deployment','rapid deployment','faster deployment'],
+  78: ['standardized','standard configurations','standardized config'],
+};
+
+const ALL_QUESTIONS_PT = [
+  /* ── PART I: MULTIPLE CHOICE (Ch4 Sys Admin) ── */
+  {n:1,  type:'mc', text:'Which of the following defines a "Small Site" in terms of organizational types?', opts:['2-10 computers, 1 OS, 2-20 users','11-100 computers, 1-3 OSes, 21-100 users','100+ computers, multiple OSes, 100+ users','500+ computers, multiple OSes, remote users']},
+  {n:2,  type:'mc', text:'A site classification that typically outsources to obtain specialized skills and reduce costs due to its large scale is the:', opts:['Small site','Midsized site','Large site','Micro site']},
+  {n:3,  type:'mc', text:'Which of the following is NOT a standard responsibility of a System Administrator?', opts:['Adding and removing hardware','Performing backups','Developing the company\'s core commercial software','Auditing security']},
+  {n:4,  type:'mc', text:'The document that establishes expectations for users and responsibilities for the SA staff is called the:', opts:['Acceptable Use Policy (AUP)','Service Level Agreement (SLA)','EULA','Informed Consent Form']},
+  {n:5,  type:'mc', text:'Informing your customers of events that will impact their system usage and availability of services without coercion is known as:', opts:['Social Engineering','Root Cause Analysis','Informed Consent','Tracking and Visibility']},
+  {n:6,  type:'mc', text:'Which troubleshooting principle ensures that users know you are working on their problem and provides an ETA if possible?', opts:['Tracking and visibility','Problem identification','Root cause analysis','Temporary workaround']},
+  {n:7,  type:'mc', text:'Solving a problem to permanently eliminate it, rather than just treating the symptoms, is known as finding the:', opts:['Temporary solution','Namespace','Root cause','Automated fix']},
+  {n:8,  type:'mc', text:'What should a System Administrator do if given a dubious, unethical, or illegal request by a colleague?', opts:['Execute the request immediately to maintain a good relationship.','Resist, document the request, and ask for it in writing.','Ignore the request without telling management.','Delete the user\'s account.']},
+  {n:9,  type:'mc', text:'Why is a request tracking (ticketing) system important?', opts:['It allows the Sysadmin to ignore minor user complaints.','It ensures problems aren\'t forgotten and reduces user interruptions.','It automatically fixes hardware errors.','It monitors internet usage.']},
+  {n:10, type:'mc', text:'System monitoring (CPU, memory, disk, network) provides crucial data for what administrative task?', opts:['Capacity planning','Creating user passwords','Social engineering','Database schema creation']},
+  /* MC Ch5 Virtualization */
+  {n:11, type:'mc', text:'Which type of hypervisor runs directly on the bare-metal hardware and acts as a special-purpose operating system?', opts:['Type 0 hypervisor','Type 1 hypervisor','Type 2 hypervisor','Application hypervisor']},
+  {n:12, type:'mc', text:'VMware Workstation running on top of a standard Windows host operating system is an example of a:', opts:['Type 0 hypervisor','Type 1 hypervisor','Type 2 hypervisor','Bare-metal hypervisor']},
+  {n:13, type:'mc', text:'The cloud computing concept where resources can be acquired and released automatically to scale immediately with users\' demands is called:', opts:['Measured service','Broad network access','Resource pooling','Rapid elasticity']},
+  {n:14, type:'mc', text:'The process of running multiple, different OSes on a single machine to reduce physical hardware footprints is known as:', opts:['Live migration','Consolidation','Templating','Isolation']},
+  {n:15, type:'mc', text:'Creating a pre-configured OS and application VM image to quickly deploy identical instances to customers is an advantage of:', opts:['Virtual storage','Desktop virtualization','Templating','Network virtualization']},
+  {n:16, type:'mc', text:'Which of the following is an example of Desktop Virtualization?', opts:['VMware vSphere','Citrix XenDesktop / VMware Horizon','Amazon EC2','Microsoft App-V']},
+  {n:17, type:'mc', text:'Software-defined storage that pools physical storage from multiple network devices into a unified virtual storage device is called:', opts:['Storage Virtualization','Server Virtualization','Application Virtualization','Desktop Virtualization']},
+  {n:18, type:'mc', text:'A hypervisor implemented entirely by hardware/firmware, dividing the machine into partitions or domains with dedicated hardware, is a:', opts:['Type 0 hypervisor','Type 1 hypervisor','Type 2 hypervisor','VMM application']},
+  {n:19, type:'mc', text:'In virtualization, the underlying physical hardware system is called the:', opts:['Guest','Host','Node','Cluster']},
+  {n:20, type:'mc', text:'Which cloud service model offers direct access to a virtual machine (e.g., Amazon EC2)?', opts:['SaaS (Software as a Service)','PaaS (Platform as a Service)','IaaS (Infrastructure as a Service)','DaaS (Desktop as a Service)']},
+  /* MC Ch6 Client-Server */
+  {n:21, type:'mc', text:'In a standard ATM network architecture, the ATM machine itself acts as the:', opts:['Database','Server','Middleware','Client']},
+  {n:22, type:'mc', text:'Which client-server architecture locates the database on the server and most/all presentation logic entirely on the client?', opts:['2-tier architecture','3-tier architecture','N-tier architecture','Web-Queue-Worker architecture']},
+  {n:23, type:'mc', text:'A client device that contains its own business logic and presentation logic, doing much of the processing locally, is called a:', opts:['Thin client','Fat client','Dummy terminal','Middleware client']},
+  {n:24, type:'mc', text:'The architecture that introduces a middle-tier application server between the client and the data server is the:', opts:['2-tier architecture','3-tier architecture','Microservices architecture','Peer-to-peer architecture']},
+  {n:25, type:'mc', text:'A set of tools, drivers, and APIs that provide a uniform means of access to system resources across platforms, connecting clients and servers, is:', opts:['Middleware','Operating System','Hypervisor','Transaction monitor']},
+  {n:26, type:'mc', text:'Which of the following is a disadvantage of the Client/Server architecture?', opts:['Mainframe functionality is made widely available.','Processing and data are localized on the server.','The server can become a bottleneck.','Business logic can be distributed.']},
+  {n:27, type:'mc', text:'Processing where the client does not wait for the server\'s answer to continue its tasks is known as:', opts:['Synchronous processing','Asynchronous processing','Stateful processing','Tightly coupled processing']},
+  {n:28, type:'mc', text:'In a Web-Queue-Worker architecture, which component performs resource-intensive tasks, long-running workflows, or batch jobs?', opts:['Web Front End','Identity Provider','Queue','Worker']},
+  {n:29, type:'mc', text:'An architecture consisting of a collection of small, autonomous services where each service implements a single business capability is called:', opts:['Microservices architecture','N-tier architecture','Big compute architecture','Monolithic architecture']},
+  {n:30, type:'mc', text:'A sequence of actions taking a database from one consistent state to another, which must possess ACID properties, is a:', opts:['Query','Transaction','Process','Snapshot']},
+  /* ── PART II: IDENTIFICATION (Ch4) ── */
+  {n:31, type:'id', text:'An organized collection of computers interacting with a group of users.', hint:'Think of the broadest term for a computing environment.'},
+  {n:32, type:'id', text:'The person responsible for making computer systems functional.', hint:'Two words; also abbreviated "Sysadmin".'},
+  {n:33, type:'id', text:'A mnemonic/acronym used to summarize the basic operations in user and data management: Create, Read, Update, Delete.', hint:'4-letter acronym.'},
+  {n:34, type:'id', text:'A policy dictating that employees should not use agency resources for personal use, such as hosting a website or pirating software.', hint:'Two words; also called AUP.'},
+  {n:35, type:'id', text:'The ethical practice of establishing expectations for users and responsibilities for the Sysadmin staff via a formal document.', hint:'Abbreviation: SLA.'},
+  {n:36, type:'id', text:'This system ensures that you don\'t forget user problems, reduces interruptions, and lets management know what you\'ve done.', hint:'Also called a ticketing system.'},
+  {n:37, type:'id', text:'A principle in troubleshooting that involves solving the core problem to permanently eliminate it, rather than just treating the symptoms.', hint:'Two words: ___ cause.'},
+  {n:38, type:'id', text:'A policy that must be disclosed and signed by employees if an employer intends to monitor their emails or internet usage.', hint:'Two words: ___ policy.'},
+  {n:39, type:'id', text:'The type of organizational site characterized by having 11-100 computers, 1-3 OSes, and 21-100 users.', hint:'Two words; neither small nor large.'},
+  {n:40, type:'id', text:'The ethical necessity to keep a written record of dubious requests made by colleagues to protect oneself from illegal activities.', hint:'One word: present participle of a verb.'},
+  /* PART II Identification Ch5 */
+  {n:41, type:'id', text:'The fundamental concept of abstracting the hardware of a single computer into several different execution environments.', hint:'One word; the overarching technology.'},
+  {n:42, type:'id', text:'In a virtualized environment, this term refers to the operating system running inside the Virtual Machine Manager (VMM).', hint:'Opposite of "host".'},
+  {n:43, type:'id', text:'Another widely used name for the Virtual Machine Manager (VMM) that creates and runs virtual machines.', hint:'Also called VMM.'},
+  {n:44, type:'id', text:'The type of virtualization that allows users to access and use an application from a separate computer than the one on which it is physically installed.', hint:'Two words: ___ virtualization.'},
+  {n:45, type:'id', text:'The cloud computing characteristic where a provider\'s computing resources are gathered to serve multiple users, dynamically assigning them as needed.', hint:'Two words: resource ___.'},
+  {n:46, type:'id', text:'A feature of VMMs that allows you to freeze a currently running VM, move it somewhere else, and resume it without interruption to users.', hint:'Two words: live ___.'},
+  {n:47, type:'id', text:'The specific type of virtualization that creates a software-based virtual version of an end user\'s desktop environment.', hint:'Two words: desktop ___.'},
+  {n:48, type:'id', text:'The cloud service model that delivers an environment including a specific OS, database, and Web server.', hint:'Abbreviation for Platform As A Service.'},
+  {n:49, type:'id', text:'A major advantage of VM templating where an administrator can easily deploy multiple identical instances of an OS and application combination.', hint:'Three words starting with "faster".'},
+  {n:50, type:'id', text:'Real-world facilities that heavily utilize Type 1 hypervisors to pool resources, manage virtual machines, and provide cloud infrastructure.', hint:'Two words: data ___.'},
+  /* PART II Identification Ch6 */
+  {n:51, type:'id', text:'A networked information requester, usually a PC or workstation, that queries data from a centralized host.', hint:'One word; the opposite of "server".'},
+  {n:52, type:'id', text:'A program or computer that provides services and manages resources on behalf of other programs.', hint:'One word; the opposite of "client".'},
+  {n:53, type:'id', text:'The communication medium in a Web-Queue-Worker architecture that sits directly between the web front end and the background worker.', hint:'Two words: message ___.'},
+  {n:54, type:'id', text:'A major drawback in client-server networks where the central host is overwhelmed by too many simultaneous client requests.', hint:'Two words: server ___.'},
+  {n:55, type:'id', text:'The layer in a 3-tier architecture that contains the shared application logic and business rules.', hint:'Also called the Business Logic layer.'},
+  {n:56, type:'id', text:'The layer in a 3-tier architecture that is located on the client and handles the user interface.', hint:'Two words: ___ layer.'},
+  {n:57, type:'id', text:'A type of client that handles presentation but relies entirely on the server for business logic and data processing.', hint:'Two words: opposite of fat client.'},
+  {n:58, type:'id', text:'The property of a transaction that ensures a sequence of actions takes a database from one consistent state to another (Atomicity, Consistency, Isolation, Durability).', hint:'Two words: ACID ___.'},
+  {n:59, type:'id', text:'An architecture specifically designed for large-scale workloads requiring a massive number of cores, like fluid dynamics or image rendering.', hint:'Three words: big compute ___.'},
+  {n:60, type:'id', text:'The specific component in a bank\'s Client/Server architecture that provides the user interface for withdrawals and simple processing.', hint:'Abbreviation: ATM.'},
+  /* ── PART III: ENUMERATION ── */
+  {n:61, type:'enum', text:'CRUD Operations — Item 1 of 4: What does the "C" in CRUD stand for?', hint:'The first operation: adding a new record.'},
+  {n:62, type:'enum', text:'CRUD Operations — Item 2 of 4: What does the "R" in CRUD stand for?', hint:'The second operation: fetching/viewing data.'},
+  {n:63, type:'enum', text:'CRUD Operations — Item 3 of 4: What does the "U" in CRUD stand for?', hint:'The third operation: modifying existing data.'},
+  {n:64, type:'enum', text:'CRUD Operations — Item 4 of 4: What does the "D" in CRUD stand for?', hint:'The fourth operation: removing a record.'},
+  {n:65, type:'enum', text:'Site Classifications — Item 1 of 3: Name the smallest site classification (2-10 computers).', hint:'Two words.'},
+  {n:66, type:'enum', text:'Site Classifications — Item 2 of 3: Name the medium site classification (11-100 computers).', hint:'Two words.'},
+  {n:67, type:'enum', text:'Site Classifications — Item 3 of 3: Name the largest site classification (100+ computers).', hint:'Two words.'},
+  {n:68, type:'enum', text:'Virtualization Types — Item 1 of 3+: Name a virtualization type that abstracts physical servers into multiple VMs.', hint:'Two words: ___ virtualization.'},
+  {n:69, type:'enum', text:'Virtualization Types — Item 2 of 3+: Name the virtualization type that creates virtual end-user desktop environments.', hint:'Two words: ___ virtualization.'},
+  {n:70, type:'enum', text:'Virtualization Types — Item 3 of 3+: Name the virtualization type that pools physical storage from multiple devices.', hint:'Two words: ___ virtualization.'},
+  {n:71, type:'enum', text:'Hypervisors — Item 1 of 3: Name the hypervisor type implemented entirely in hardware/firmware with dedicated partitions.', hint:'Type ___ hypervisor (number: zero).'},
+  {n:72, type:'enum', text:'Hypervisors — Item 2 of 3: Name the hypervisor type that runs directly on bare-metal hardware as a special OS.', hint:'Type ___ hypervisor (number: one).'},
+  {n:73, type:'enum', text:'Hypervisors — Item 3 of 3: Name the hypervisor type that runs on top of a host operating system.', hint:'Type ___ hypervisor (number: two).'},
+  {n:74, type:'enum', text:'3-Tier Architecture — Tier 1 of 3: Name the tier located on the client that handles the user interface.', hint:'___ logic / layer.'},
+  {n:75, type:'enum', text:'3-Tier Architecture — Tier 2 of 3: Name the middle tier containing shared application logic and business rules.', hint:'Business / ___ logic layer.'},
+  {n:76, type:'enum', text:'3-Tier Architecture — Tier 3 of 3: Name the tier that stores and manages data.', hint:'Database / ___ logic layer.'},
+  {n:77, type:'enum', text:'VM Templating Advantages — Advantage 1 of 2: What is the first primary advantage of VM Templating?', hint:'Think: speed of deployment.'},
+  {n:78, type:'enum', text:'VM Templating Advantages — Advantage 2 of 2: What is the second primary advantage of VM Templating?', hint:'Think: consistency of instances.'},
+  {n:79, type:'enum', text:'Client Types — Type 1 of 2: Name the client type that contains its own business logic and does processing locally.', hint:'Opposite of thin client.'},
+  {n:80, type:'enum', text:'Client Types — Type 2 of 2: Name the client type that handles presentation but relies on the server for business logic.', hint:'Opposite of fat client.'},
+];
 
 const SECTION_LABELS_FDS = {
   Remembering:'Remembering', Understanding:'Understanding',
@@ -1181,7 +1405,12 @@ const SECTION_LABELS_IAS = {
   'Remembering':'Remembering', 'Understanding':'Understanding',
   'Applying':'Applying', 'Analyzing':'Analyzing', 'Evaluating':'Evaluating'
 };
+const SECTION_LABELS_PT = {
+  'System Admin':'System Admin', 'Virtualization':'Virtualization', 'Client-Server':'Client-Server'
+};
 let SECTION_LABELS = SECTION_LABELS_FDS;
+let BLOOM_MAP = BLOOM_MAP_FDS;
+let ANSWER_KEY = ANSWER_KEY_FDS;
 
 function getSectionForNum(n) {
   for (const [sec, nums] of Object.entries(BLOOM_MAP)) {
@@ -1365,11 +1594,13 @@ function startExam() {
     BLOOM_MAP = BLOOM_MAP_FDS; ANSWER_KEY = ANSWER_KEY_FDS; SECTION_LABELS = SECTION_LABELS_FDS;
   } else if (id === 'ds1') {
     BLOOM_MAP = BLOOM_MAP_DS1; ANSWER_KEY = ANSWER_KEY_DS1; SECTION_LABELS = SECTION_LABELS_DS1;
-  } else {
+  } else if (id === 'ias') {
     BLOOM_MAP = BLOOM_MAP_IAS; ANSWER_KEY = ANSWER_KEY_IAS; SECTION_LABELS = SECTION_LABELS_IAS;
+  } else {
+    BLOOM_MAP = BLOOM_MAP_PT; ANSWER_KEY = ANSWER_KEY_PT; SECTION_LABELS = SECTION_LABELS_PT;
   }
-  const questionsPool = id === 'fds' ? ALL_QUESTIONS : id === 'ds1' ? ALL_QUESTIONS_DS1 : ALL_QUESTIONS_IAS;
-  state.questions = state.shuffle ? shuffle(questionsPool) : [...questionsPool];
+  const poolMap = { fds: ALL_QUESTIONS, ds1: ALL_QUESTIONS_DS1, ias: ALL_QUESTIONS_IAS, pt: ALL_QUESTIONS_PT };
+  state.questions = state.shuffle ? shuffle(poolMap[id]) : [...poolMap[id]];
   state.current = 0;
   state.answers = {};
   state.correctCount = 0;
@@ -1396,6 +1627,19 @@ function cancelExit() {
 /* ═══════════════════════════════════════
    QUIZ
 ═══════════════════════════════════════ */
+/* ─── PT fuzzy match helper ─────────────────────── */
+function ptNormalize(s) {
+  return String(s).toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();
+}
+function ptCheckAnswer(n, userInput) {
+  const norm = ptNormalize(userInput);
+  const correct = ptNormalize(ANSWER_KEY_PT[n]);
+  if (norm === correct) return true;
+  // check aliases
+  const aliases = (PT_ALIASES[n] || []).map(ptNormalize);
+  return aliases.includes(norm);
+}
+
 function renderCurrentQuestion() {
   const idx = state.current;
   const q = state.questions[idx];
@@ -1412,42 +1656,81 @@ function renderCurrentQuestion() {
   const alreadyAnswered = state.answers[idx] !== undefined;
   const chosen = state.answers[idx];
   const correct = ANSWER_KEY[q.n];
-  const isCorrect = chosen === correct;
+  const correctDisplay = ANSWER_KEY_PT ? ANSWER_KEY_PT[q.n] : correct; // hoisted — used in feedback for id/enum
+  const isCorrect = q.type === 'mc' || !q.type
+    ? chosen === correct
+    : ptCheckAnswer(q.n, chosen || '');
+
+  // Part label badge — uses distinct .q-part-badge class
+  const partLabel = q.type === 'id' ? 'Part II · Identification' : q.type === 'enum' ? 'Part III · Enumeration' : '';
+  const typeBadge = partLabel
+    ? `<span class="q-part-badge">${partLabel}</span>`
+    : '';
 
   let html = `
     <div class="q-counter">Question <span>${idx + 1}</span> of ${total} &nbsp;·&nbsp; Item ${q.n}</div>
-    <div class="q-section-badge">${section}</div>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:4px;">
+      <div class="q-section-badge" style="margin-bottom:0">${section}</div>${typeBadge}
+    </div>
   `;
 
-  // Show table/FD if needed (only for certain items, show once per table key in a session)
+  // Show table/FD if needed (only for FDS items)
   if (q.tableRef) {
     html += buildTableHTML(q.tableRef);
     if (q.fdRef) html += buildFDHTML(q.fdRef);
   }
 
   html += `<div class="q-text">${q.text}</div>`;
-  html += `<div class="opts-grid">`;
-  q.opts.forEach((opt, oi) => {
-    const letter = ['A','B','C','D'][oi];
-    let cls = '';
-    if (alreadyAnswered) {
-      if (letter === chosen && isCorrect) cls = 'correct-ans';
-      else if (letter === chosen && !isCorrect) cls = 'wrong-ans';
-      else if (letter === correct && !isCorrect) cls = 'reveal-ans';
+
+  if (!q.type || q.type === 'mc') {
+    /* ── MC layout (existing) ── */
+    html += `<div class="opts-grid">`;
+    q.opts.forEach((opt, oi) => {
+      const letter = ['A','B','C','D'][oi];
+      let cls = '';
+      if (alreadyAnswered) {
+        if (letter === chosen && isCorrect) cls = 'correct-ans';
+        else if (letter === chosen && !isCorrect) cls = 'wrong-ans';
+        else if (letter === correct && !isCorrect) cls = 'reveal-ans';
+      }
+      html += `<button class="opt ${cls}" onclick="answerQuestion('${letter}')" ${alreadyAnswered ? 'disabled' : ''}>
+        <span class="opt-letter">${letter}</span>${opt}
+      </button>`;
+    });
+    html += `</div>`;
+  } else {
+    /* ── ID / ENUM text-input layout ── */
+    if (q.hint && !alreadyAnswered) {
+      html += `<div class="q-hint">💡 ${q.hint}</div>`;
     }
-    html += `<button class="opt ${cls}" onclick="answerQuestion('${letter}')" ${alreadyAnswered ? 'disabled' : ''}>
-      <span class="opt-letter">${letter}</span>${opt}
-    </button>`;
-  });
-  html += `</div>`;
+    if (!alreadyAnswered) {
+      html += `<div class="id-input-wrap">
+        <input id="id-input" class="id-input" type="text" placeholder="Type your answer here…"
+          onkeydown="if(event.key==='Enter')submitIdAnswer()" autocomplete="off" />
+        <button class="id-submit-btn" onclick="submitIdAnswer()">Submit ↵</button>
+      </div>`;
+    } else {
+      const dispChosen = chosen || '(no answer)';
+      html += `<div class="id-input-wrap answered">
+        <span class="id-your-ans ${isCorrect ? 'id-correct' : 'id-wrong'}">Your answer: <strong>${dispChosen}</strong></span>
+      </div>`;
+    }
+  }
 
   // Feedback
   if (alreadyAnswered) {
     const fbCls = isCorrect ? 'correct' : 'wrong';
     const icon = isCorrect ? '✓' : '✗';
-    const msg = isCorrect
-      ? `Correct! The answer is <strong>${correct}</strong>.`
-      : `Incorrect. You chose <strong>${chosen}</strong>. The correct answer is <strong>${correct}</strong>.`;
+    let msg;
+    if (!q.type || q.type === 'mc') {
+      msg = isCorrect
+        ? `Correct! The answer is <strong>${correct}</strong>.`
+        : `Incorrect. You chose <strong>${chosen}</strong>. The correct answer is <strong>${correct}</strong>.`;
+    } else {
+      msg = isCorrect
+        ? `Correct! The answer is <strong>${correctDisplay}</strong>.`
+        : `Incorrect. Your answer: <strong>${chosen || '(blank)'}</strong>. Correct: <strong>${correctDisplay}</strong>.`;
+    }
     html += `<div class="q-feedback ${fbCls}" style="display:flex"><span class="icon">${icon}</span>${msg}</div>`;
   } else {
     html += `<div class="q-feedback"></div>`;
@@ -1468,7 +1751,14 @@ function renderCurrentQuestion() {
   const body = document.getElementById('quiz-body');
   body.innerHTML = html;
 
-  // Render dots
+  // Focus input if ID/ENUM and not answered
+  if ((q.type === 'id' || q.type === 'enum') && !alreadyAnswered) {
+    setTimeout(() => {
+      const inp = document.getElementById('id-input');
+      if (inp) inp.focus();
+    }, 50);
+  }
+
   renderDots();
 }
 
@@ -1493,16 +1783,17 @@ function renderDots() {
   const row = document.getElementById('dot-row');
   if (!row) return;
   const total = state.questions.length;
-  // Show max 30 dots to avoid overflow
   const showDots = total <= 30;
   if (!showDots) { row.style.display = 'none'; return; }
   let html = '';
-  state.questions.forEach((_, i) => {
+  state.questions.forEach((q2, i) => {
     let cls = 'q-dot';
     if (i === state.current) cls += ' current';
     else if (state.answers[i] !== undefined) {
-      const q = state.questions[i];
-      cls += state.answers[i] === ANSWER_KEY[q.n] ? ' dot-correct' : ' dot-wrong';
+      const isC = q2.type && q2.type !== 'mc'
+        ? ptCheckAnswer(q2.n, state.answers[i])
+        : state.answers[i] === ANSWER_KEY[q2.n];
+      cls += isC ? ' dot-correct' : ' dot-wrong';
     }
     html += `<div class="${cls}" onclick="jumpTo(${i})" title="Q${i+1}"></div>`;
   });
@@ -1516,6 +1807,18 @@ function answerQuestion(letter) {
   const correct = ANSWER_KEY[q.n];
   state.answers[idx] = letter;
   if (letter === correct) state.correctCount++;
+  renderCurrentQuestion();
+}
+
+function submitIdAnswer() {
+  const idx = state.current;
+  if (state.answers[idx] !== undefined) return;
+  const q = state.questions[idx];
+  const inp = document.getElementById('id-input');
+  const val = (inp ? inp.value : '').trim();
+  if (!val) return;
+  state.answers[idx] = val;
+  if (ptCheckAnswer(q.n, val)) state.correctCount++;
   renderCurrentQuestion();
 }
 
@@ -1571,14 +1874,18 @@ function buildSummary() {
   const pct = Math.round((correct / total) * 100);
   const g = getGrade(pct);
 
-  // Bloom breakdown
+  // Section breakdown
+  const sectionLabel = state.subject.id === 'pt' ? 'Performance by Section' : 'Performance by Bloom\'s Level';
   let bloomHTML = '';
   Object.entries(BLOOM_MAP).forEach(([level, nums]) => {
     const levelQs = state.questions.filter(q => nums.includes(q.n));
     if (!levelQs.length) return;
-    const levelCorrect = levelQs.filter((q, qi) => {
+    const levelCorrect = levelQs.filter(q => {
       const globalIdx = state.questions.indexOf(q);
-      return state.answers[globalIdx] === ANSWER_KEY[q.n];
+      const ans = state.answers[globalIdx];
+      return q.type && q.type !== 'mc'
+        ? ptCheckAnswer(q.n, ans || '')
+        : ans === ANSWER_KEY[q.n];
     }).length;
     const bpct = Math.round((levelCorrect / levelQs.length) * 100);
     bloomHTML += `<div class="bloom-row">
@@ -1590,19 +1897,26 @@ function buildSummary() {
 
   // Wrong items
   const wrongItems = state.questions
-    .map((q, i) => ({ q, i, chosen: state.answers[i], correct: ANSWER_KEY[q.n] }))
-    .filter(x => x.chosen !== x.correct)
+    .map((q, i) => {
+      const ans = state.answers[i];
+      const isC = q.type && q.type !== 'mc'
+        ? ptCheckAnswer(q.n, ans || '')
+        : ans === ANSWER_KEY[q.n];
+      return { q, i, chosen: ans, correct: ANSWER_KEY[q.n], isCorrect: isC };
+    })
+    .filter(x => !x.isCorrect)
     .sort((a, b) => a.q.n - b.q.n);
 
   let reviewHTML = '';
   if (wrongItems.length > 0) {
     reviewHTML = `<div class="review-section"><h3>Items to Review — ${wrongItems.length} incorrect</h3>`;
     wrongItems.forEach(({ q, chosen, correct }) => {
+      const isTextType = q.type === 'id' || q.type === 'enum';
       reviewHTML += `<div class="review-item">
         <div class="ri-top">
           <span class="ri-num">Item ${q.n} · ${getSectionForNum(q.n)}</span>
           <div class="ri-tags">
-            <span class="ri-tag yours">You: ${chosen}</span>
+            <span class="ri-tag yours">You: ${chosen || '(blank)'}</span>
             <span class="ri-tag correct">Correct: ${correct}</span>
           </div>
         </div>
@@ -1632,7 +1946,7 @@ function buildSummary() {
       <div class="stat-box s-neutral"><div class="sval">${total}</div><div class="slbl">Total</div></div>
     </div>
     <div class="bloom-section">
-      <h3>Performance by Bloom's Level</h3>
+      <h3>${sectionLabel}</h3>
       ${bloomHTML}
     </div>
     ${reviewHTML}
