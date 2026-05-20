@@ -955,6 +955,29 @@
     .mp-mini { bottom: 88px; right: 14px; }
     .mp-mini-panel { width: 210px; }
     .mp-vol-slider { width: 52px; }
+
+    /* ── Quiz mode: shrink FAB, move above nav, reduce visual noise ── */
+    .mp-mini.quiz-mode {
+      bottom: 68px;
+      right: 10px;
+    }
+    .mp-mini.quiz-mode .mp-fab {
+      width: 34px;
+      height: 34px;
+      font-size: 0.72rem;
+      opacity: 0.55;
+      box-shadow: 0 2px 10px rgba(192,57,43,0.2);
+      transition: opacity 0.2s, transform 0.15s, background 0.15s;
+    }
+    .mp-mini.quiz-mode .mp-fab:hover,
+    .mp-mini.quiz-mode .mp-fab:active {
+      opacity: 1;
+    }
+    /* Mini panel in quiz mode: narrower, anchors to right edge */
+    .mp-mini.quiz-mode .mp-mini-panel {
+      width: 190px;
+      font-size: 0.9em;
+    }
   }
 
   /* ─── ANIMATIONS ─── */
@@ -2948,6 +2971,18 @@ function mpHandleScreen(screenId) {
   if (!mini) return;
   // Hide FAB on prayer screen (full player is there); show on all others
   mini.style.display = screenId === 'screen-prayer' ? 'none' : 'flex';
+
+  // On quiz screen: apply quiz-mode (smaller, less intrusive) and auto-close panel
+  const isQuiz = screenId === 'screen-quiz';
+  mini.classList.toggle('quiz-mode', isQuiz);
+  if (isQuiz) {
+    // Auto-collapse the mini panel so it doesn't block answer options
+    const panel = document.getElementById('mp-mini-panel');
+    if (panel && panel.classList.contains('open')) {
+      panel.classList.remove('open');
+      mpState.miniOpen = false;
+    }
+  }
 }
 
 /* ── Utility ── */
