@@ -985,6 +985,14 @@
       <div class="toggle on" id="toggle-hints"></div>
     </div>
 
+    <div class="config-option" id="cfg-part2" onclick="togglePart2()" style="display:none">
+      <div class="config-opt-info">
+        <div class="config-opt-title">Include Modules 15–16</div>
+        <div class="config-opt-desc">Add Part 2 — IP Static Routing &amp; Troubleshooting (+25 questions)</div>
+      </div>
+      <div class="toggle on" id="toggle-part2"></div>
+    </div>
+
     <button class="start-btn" onclick="startExam()">Begin Exam →</button>
   </div>
 </div>
@@ -1159,6 +1167,15 @@ const SUBJECTS = [
     chapters: 'Ch. 4 · Ch. 5 · Ch. 6',
     items: 80,
     bloom: 3,
+  },
+  {
+    id: 'srwe',
+    code: 'SRWE',
+    title: 'Switching, Routing & Wireless Essentials',
+    desc: 'CCNA SRWE v7.0 mock reviewer. Part 1 covers LAN Security, Switch Security, WLAN Concepts, WLAN Config, and Routing Concepts (Modules 10–14). Part 2 covers IP Static Routing and Troubleshooting (Modules 15–16).',
+    chapters: 'Modules 10–16',
+    items: 100,
+    bloom: 7,
   }
 ];
 
@@ -1709,6 +1726,145 @@ const ALL_QUESTIONS = [
   {n:70, text:'Which of the following statements about object-relational mapping (ORM) performance is false?', opts:['Lazy loading can reduce initial load time by deferring fetching of associated objects','The N+1 query problem can be mitigated by using join fetching or batch fetching','Eager fetching may retrieve more data than necessary, leading to performance overhead','ORM queries are always faster than handwritten SQL for complex joins']},
 ];
 
+/* ══════════════════════════════════════════════════
+   SRWE — CCNA SRWE v7.0 DATA
+═══════════════════════════════════════════════════ */
+const BLOOM_MAP_SRWE = {
+  'Module 10': [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+  'Module 11': [16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+  'Module 12': [31,32,33,34,35,36,37,38,39,40,41,42,43,44,45],
+  'Module 13': [46,47,48,49,50,51,52,53,54,55,56,57,58,59,60],
+  'Module 14': [61,62,63,64,65,66,67,68,69,70,71,72,73,74,75],
+  'Module 15': [76,77,78,79,80,81,82,83,84,85,86,87,88,89,90],
+  'Module 16': [91,92,93,94,95,96,97,98,99,100],
+};
+
+const ANSWER_KEY_SRWE = {
+  1:'B',2:'C',3:'B',4:'A',5:'C',6:'A',7:'C',8:'B',9:'B',10:'A',
+  11:'B',12:'C',13:'B',14:'C',15:'C',
+  16:'C',17:'C',18:'B',19:'B',20:'D',21:'B',22:'B',23:'B',24:'A',25:'B',26:'A',27:'B',28:'B',29:'B',30:'A',
+  31:'A',32:'B',33:'B',34:'B',35:'C',36:'B',37:'C',38:'B',39:'D',40:'B',41:'A',42:'D',43:'B',44:'C',45:'B',
+  46:'A',47:'B',48:'B',49:'A',50:'B',51:'A',52:'A',53:'B',54:'C',55:'B',56:'A',57:'A',58:'B',59:'A',60:'A',
+  61:'B',62:'C',63:'B',64:'A',65:'A',66:'B',67:'B',68:'A',69:'C',70:'B',71:'B',72:'A',73:'B',74:'B',75:'C',
+  76:'B',77:'B',78:'C',79:'A',80:'B',81:'B',82:'B',83:'D',84:'C',85:'C',86:'A',87:'B',88:'B',89:'A',90:'B',
+  91:'C',92:'B',93:'C',94:'B',95:'B',96:'B',97:'B',98:'B',99:'A',100:'C',
+};
+
+const SECTION_LABELS_SRWE = {
+  'Module 10':'Module 10','Module 11':'Module 11','Module 12':'Module 12',
+  'Module 13':'Module 13','Module 14':'Module 14','Module 15':'Module 15','Module 16':'Module 16'
+};
+
+const ALL_QUESTIONS_SRWE = [
+  /* ── MODULE 10: LAN Security Concepts ── */
+  {n:1,  text:'What type of attack involves a threat actor hijacking a valid IP address of another device on the subnet or using a random IP address?', opts:['MAC Spoofing','IP Spoofing','ARP Poisoning','DHCP Starvation']},
+  {n:2,  text:'Which protocol is used by 802.1X to authenticate endpoints and devices on a LAN?', opts:['RADIUS','SNMP','EAP','TACACS+']},
+  {n:3,  text:'What is the goal of a MAC address table overflow attack?', opts:['To crash the switch','To force the switch to act like a hub and flood all frames','To poison the ARP cache of the router','To exhaust the DHCP pool']},
+  {n:4,  text:'In a DHCP Starvation attack, the attacker attempts to exhaust the IP address space of the DHCP server. What tool is commonly used to perform this attack?', opts:['Yersinia','Gobbler','Wireshark','Nmap']},
+  {n:5,  text:'How does a threat actor perform a VLAN Hopping attack?', opts:['By sending malicious STP BPDU frames','By sending continuous DHCP Discover messages','By spoofing DTP messages to form a trunk with the switch','By modifying the source MAC address of incoming frames']},
+  {n:6,  text:'Which vulnerability allows a threat actor to easily discover the IP address, iOS software version, platform, and native VLAN of neighboring Cisco devices?', opts:['Unencrypted CDP messages','Unencrypted HTTP traffic','Open SSH ports','Default SNMP strings']},
+  {n:7,  text:'What mitigation technique is used to prevent threat actors from manipulating the Spanning Tree Protocol (STP) topology?', opts:['DHCP Snooping','Dynamic ARP Inspection (DAI)','BPDU Guard','IPSG']},
+  {n:8,  text:'A rogue DHCP server is placed on a network by a threat actor. What type of attack is this considered?', opts:['DHCP Starvation','DHCP Spoofing','ARP Poisoning','MAC Spoofing']},
+  {n:9,  text:'Which component in the AAA framework determines what a user can and cannot do on the network after logging in?', opts:['Authentication','Authorization','Accounting','Auditing']},
+  {n:10, text:'A threat actor sends unsolicited ARP Replies to other hosts on the subnet containing their own MAC address and the IP address of the default gateway. What attack is occurring?', opts:['ARP Poisoning/Spoofing','DHCP Spoofing','MAC Address Table Overflow','STP Spoofing']},
+  {n:11, text:'What is a "Zombie" in the context of network security?', opts:['A device configured with a duplicate IP address','A compromised device used in a coordinated DDoS attack','A rogue access point','A server with outdated firmware']},
+  {n:12, text:'Which of the following is considered Endpoint Security?', opts:['Disabling unused switch ports','Implementing BPDU Guard on switches','Using Antivirus and Host Intrusion Prevention Systems (HIPS) on a PC','Configuring OSPF authentication']},
+  {n:13, text:'What happens when a switch\'s MAC address table is full?', opts:['It drops all new incoming frames','It floods unknown unicast frames out of all ports except the receiving port','It restarts the switching process','It flushes the entire MAC table']},
+  {n:14, text:'Which Layer 2 attack can be mitigated by implementing IP Source Guard (IPSG)?', opts:['VLAN Hopping','STP Spoofing','IP and MAC Address Spoofing','CDP Reconnaissance']},
+  {n:15, text:'What is the primary purpose of accounting in the AAA framework?', opts:['To verify a user\'s identity','To assign access rights to a user','To track user actions and collect data for auditing and billing','To encrypt user traffic']},
+  /* ── MODULE 11: Switch Security Configuration ── */
+  {n:16, text:'What is the default violation mode of switch port security?', opts:['Protect','Restrict','Shutdown','Error-disable']},
+  {n:17, text:'You want a switch port to learn MAC addresses dynamically and save them to the running configuration so they survive a reboot if the config is saved. Which feature should you use?', opts:['Static MAC addressing','Dynamic ARP Inspection','Sticky secure MAC addresses','DHCP Snooping']},
+  {n:18, text:'What happens to traffic when a port security violation occurs, and the mode is set to "Restrict"?', opts:['The port shuts down completely and an SNMP trap is sent','Unknown MAC addresses are dropped, a syslog message is logged, and the violation counter increments','Unknown MAC addresses are dropped, but no syslog message is created','The port continues forwarding traffic but limits the bandwidth']},
+  {n:19, text:'Which configuration step is essential to mitigate VLAN hopping attacks?', opts:['Enable DTP on all ports','Set the native VLAN to an unused VLAN other than VLAN 1','Configure all access ports as trunks','Enable PortFast on all trunks']},
+  {n:20, text:'What feature determines whether DHCP messages are from an administratively configured trusted or untrusted source?', opts:['IP Source Guard','Dynamic ARP Inspection','Port Security','DHCP Snooping']},
+  {n:21, text:'On which ports should DHCP Snooping be configured as "trusted"?', opts:['All access ports connected to PCs','Ports connected to other switches and the legitimate DHCP server','Ports connected to guest networks','All ports on the switch']},
+  {n:22, text:'Dynamic ARP Inspection (DAI) relies on a database built by another security feature to verify ARP packets. Which feature is this?', opts:['STP Root Guard','DHCP Snooping binding database','Port Security sticky database','IPSG database']},
+  {n:23, text:'A network administrator wants to prevent a newly plugged-in rogue switch from becoming the root bridge in the STP topology. Which feature should be implemented?', opts:['BPDU Guard','Root Guard','PortFast','DTP']},
+  {n:24, text:'What is the purpose of configuring PortFast on a switch port?', opts:['To immediately transition the port to the forwarding state, bypassing listening and learning states','To increase the port speed to GigabitEthernet','To immediately shut down the port if a BPDU is received','To block unauthorized MAC addresses']},
+  {n:25, text:'What command is used to enable port security on an interface?', opts:['switchport port-security enable','switchport mode access followed by switchport port-security','switchport security on','spanning-tree portfast']},
+  {n:26, text:'Which mitigation technique should be applied to prevent CDP reconnaissance?', opts:['no cdp run in global configuration mode or no cdp enable on the interface','switchport nonegotiate','ip arp inspection vlan','spanning-tree bpduguard enable']},
+  {n:27, text:'When an interface is put into an error-disabled state due to a port security violation, how can an administrator re-enable the port?', opts:['Issue the \'clear port-security\' command','Issue a \'shutdown\' followed by a \'no shutdown\' command on the interface','Unplug and replug the cable','Restart the switch']},
+  {n:28, text:'Which command limits the number of MAC addresses allowed on a secure port to 5?', opts:['switchport port-security max 5','switchport port-security maximum 5','switchport port-security limit 5','mac-address-table limit 5']},
+  {n:29, text:'To mitigate DHCP Starvation, which feature can rate-limit the number of DHCP discovery messages a port can receive?', opts:['DAI','DHCP Snooping','Port Security','IPSG']},
+  {n:30, text:'Why must you explicitly configure a port as an access port (switchport mode access) before enabling port security?', opts:['Port security cannot be enabled on a dynamic or trunk port','Access mode encrypts the MAC addresses','It forces the port to run at full-duplex','It prevents the port from shutting down']},
+  /* ── MODULE 12: WLAN Concepts ── */
+  {n:31, text:'Which frequency bands are primarily used by IEEE 802.11 Wireless LANs?', opts:['2.4 GHz and 5 GHz','900 MHz and 2.4 GHz','5 GHz and 10 GHz','2.4 GHz and 60 GHz']},
+  {n:32, text:'What technology is used in wireless networks to manage multiple Access Points from a single centralized device?', opts:['DTP','CAPWAP','STP','VTP']},
+  {n:33, text:'Which WLAN component is responsible for connecting wireless clients to the wired enterprise network?', opts:['Wireless LAN Controller (WLC)','Access Point (AP)','Wireless Network Interface Card (WNIC)','Router']},
+  {n:34, text:'In CAPWAP architecture, which function is handled by the WLC rather than the lightweight AP (Split MAC architecture)?', opts:['Transmission of beacon frames','802.11 MAC management and client authentication','Sending probe responses','MAC layer data encryption/decryption']},
+  {n:35, text:'Which IEEE 802.11 standard operates in both the 2.4 GHz and 5 GHz bands and is commonly known as Wi-Fi 6?', opts:['802.11n','802.11ac','802.11ax','802.11g']},
+  {n:36, text:'In the 2.4 GHz band, how many non-overlapping channels are available for use in North America to avoid channel interference?', opts:['1 (Channel 6)','3 (Channels 1, 6, and 11)','11 (Channels 1 to 11)','14 (Channels 1 to 14)']},
+  {n:37, text:'What type of antenna provides 360-degree coverage and is typically used in indoor office environments?', opts:['Yagi antenna','Parabolic dish','Omnidirectional antenna','Directional antenna']},
+  {n:38, text:'A network administrator discovers a wireless access point connected to the network that was not authorized. What type of threat is this?', opts:['DoS Attack','Rogue AP','Evil Twin','MAC Spoofing']},
+  {n:39, text:'Which wireless security protocol is currently considered the most secure and uses the SAE (Simultaneous Authentication of Equals) protocol?', opts:['WEP','WPA','WPA2','WPA3']},
+  {n:40, text:'An attacker sets up an AP with the same SSID as a legitimate corporate AP to intercept user traffic. What type of attack is this?', opts:['Rogue AP','Evil Twin Attack','SSID Cloaking','Wireless DoS']},
+  {n:41, text:'What is the purpose of the DTLS protocol in a CAPWAP implementation?', opts:['It provides encryption and security for data traveling between the AP and WLC','It routes traffic between different VLANs','It authenticates wireless clients to the RADIUS server','It assigns IP addresses to lightweight APs']},
+  {n:42, text:'Which older, highly vulnerable shared-key authentication method should never be used in modern WLANs?', opts:['WPA3','WPA2','802.1X','WEP']},
+  {n:43, text:'Which authentication method requires an external AAA (RADIUS) server to authenticate users individually?', opts:['WPA2 Personal','WPA2 Enterprise','WPA2 PSK','Open System Authentication']},
+  {n:44, text:'What technique hides the wireless network name from clients browsing for available networks?', opts:['MAC Address Filtering','WPA Encryption','SSID Cloaking','Port Security']},
+  {n:45, text:'In a wireless network, a Management Frame DoS attack often exploits which unencrypted frames to disconnect legitimate users?', opts:['Beacon frames','Deauthentication frames','Probe request frames','Data frames']},
+  /* ── MODULE 13: WLAN Configuration ── */
+  {n:46, text:'What interface on a WLC is used for out-of-band management and initial configuration?', opts:['Management interface','AP-manager interface','Virtual interface','Service-port interface']},
+  {n:47, text:'When configuring a WPA2 Enterprise WLAN on a WLC, what critical piece of server information must be provided?', opts:['The IP address of the DHCP server','The IP address and shared secret of the RADIUS server','The MAC address of the core switch','The pre-shared key (PSK)']},
+  {n:48, text:'What is a "Trap" in the context of SNMP used on a WLC?', opts:['A malicious packet designed to crash the WLC','A log message sent proactively from the WLC to the SNMP server when an event occurs','A database holding user credentials','A firewall rule blocking unauthorized access']},
+  {n:49, text:'On a WLC, what maps a WLAN to a specific VLAN on the wired network?', opts:['A dynamic interface','The management interface','The virtual interface','The service-port interface']},
+  {n:50, text:'In the troubleshooting process for WLAN issues, what should an administrator do if they determine a PC cannot connect to the AP, but other devices can?', opts:['Reboot the WLC','Investigate the PC\'s wireless NIC settings and drivers','Change the WLAN password','Upgrade the WLC firmware']},
+  {n:51, text:'What does the WLC use the Virtual Interface for?', opts:['Layer 3 roaming and Web Authentication','Out-of-band management','Transmitting CAPWAP data to APs','Connecting to the core router']},
+  {n:52, text:'To upgrade the functionality and fix security vulnerabilities of a wireless router or AP, what action should the administrator perform?', opts:['Upgrade the firmware','Change the SSID','Enable SSID cloaking','Reset to factory defaults']},
+  {n:53, text:'If a wireless network is performing poorly due to heavy traffic on the 2.4 GHz band, what is a recommended solution to increase bandwidth?', opts:['Move all users back to wired connections','Split the traffic by moving compatible dual-band clients to the 5 GHz band','Increase the transmit power of the 2.4 GHz radio to maximum','Disable WPA2 encryption']},
+  {n:54, text:'When configuring a new WLAN on a WLC, what must be done before the WLAN becomes visible and usable by wireless clients?', opts:['Assign a QoS profile','Configure the RADIUS server','Check the "Enabled" box under the WLAN status','Reboot the APs']},
+  {n:55, text:'In WPA2 Personal (PSK) configuration, what must match exactly between the client and the AP/WLC?', opts:['The username and password','The Pre-Shared Key (passphrase)','The RADIUS secret','The management IP address']},
+  {n:56, text:'When troubleshooting a wireless connection, which is a process of elimination recommended to find the fault?', opts:['Check physical connectivity → Check IP addressing → Check RF interference → Check client configuration','Reinstall Windows → Buy new router → Change ISP','Replace all APs → Check WLC → Check switch','Wait for the issue to resolve itself']},
+  {n:57, text:'The WLC graphical user interface (GUI) is typically accessed using which protocol?', opts:['HTTP or HTTPS','SSH','Telnet','TFTP']},
+  {n:58, text:'What information is used by the WLC to communicate with the RADIUS server for client authentication?', opts:['CAPWAP tunnel ID','The RADIUS server IP address and shared secret','The client\'s MAC address only','The AP\'s management IP address']},
+  {n:59, text:'When setting up a Remote Site WLAN using a small wireless router, what should an administrator change immediately to secure the device?', opts:['The default administrative password','The default gateway','The routing protocol to OSPF','The subnet mask']},
+  {n:60, text:'Which protocol provides an overall picture of WLC system information, performance, and can collect advanced settings remotely?', opts:['SNMP','CDP','ICMP','ARP']},
+  /* ── MODULE 14: Routing Concepts ── */
+  {n:61, text:'What is the primary function of a router when it receives a packet?', opts:['To switch the frame based on the destination MAC address','To determine the best path to the destination network and forward the packet','To broadcast the packet to all interfaces','To change the source IP address of the packet']},
+  {n:62, text:'When a router determines the best path to a destination network, what criterion does it use if it has multiple routes to the same network from different routing sources (e.g., Static, OSPF, EIGRP)?', opts:['Lowest Metric','Highest Metric','Lowest Administrative Distance (AD)','Highest Administrative Distance (AD)']},
+  {n:63, text:'What happens if a router searches its routing table and finds two paths to the exact same destination network with equal cost metrics?', opts:['It drops the packets','It performs equal cost load balancing across both paths','It randomly deletes one path','It sends the packet back to the source']},
+  {n:64, text:'What concept describes how a router forwards packets based on the most specific matching route in the routing table (e.g., /26 is preferred over /24)?', opts:['Longest prefix match','Shortest path first','Administrative distance','Routing metric']},
+  {n:65, text:'In an IP routing table, what does the letter \'C\' next to a route signify?', opts:['Connected (Directly attached network)','Cisco (Cisco proprietary protocol)','Candidate (Candidate default route)','Closed (Route is unavailable)']},
+  {n:66, text:'What does the letter \'L\' indicate in the routing table for newer Cisco IOS versions?', opts:['Link-state routing protocol','Local host route (the IP address configured on the router\'s interface itself)','Loopback interface','Load-balanced route']},
+  {n:67, text:'Which of the following is considered a dynamic routing protocol?', opts:['Static Route','OSPF','Default Route','Floating Static Route']},
+  {n:68, text:'What are the two main types of dynamic routing protocols used on the Internet?', opts:['IGPs (Interior Gateway Protocols) and EGPs (Exterior Gateway Protocols)','TCP and UDP','IPv4 and IPv6','CSMA/CD and CSMA/CA']},
+  {n:69, text:'When a router forwards a packet to a next-hop router on an Ethernet network, what information in the frame header changes?', opts:['Source and Destination IP addresses','The TTL is reset to 255','Source and Destination MAC addresses','The TCP port numbers']},
+  {n:70, text:'What mechanism does a router use to find the MAC address of the next-hop IP address on an Ethernet network?', opts:['DNS request','ARP request','DHCP request','CDP broadcast']},
+  {n:71, text:'Which routing component measures the \'cost\' or \'distance\' to reach a network, such as hop count or bandwidth?', opts:['Administrative Distance','Metric','Next-hop IP','Prefix Length']},
+  {n:72, text:'What is the Administrative Distance of a directly connected route?', opts:['0','1','90','110']},
+  {n:73, text:'If a packet\'s destination IP does not match any specific route in the routing table, what will the router use to forward the packet (if configured)?', opts:['Directly connected network','Gateway of Last Resort (Default Route)','Broadcast address','Loopback interface']},
+  {n:74, text:'A static route is manually configured by an administrator. What is its default Administrative Distance?', opts:['0','1','90','120']},
+  {n:75, text:'What command provides the basic configuration of a router\'s IP routing table?', opts:['show running-config','show interfaces','show ip route','show mac address-table']},
+  /* ── MODULE 15: IP Static Routing ── */
+  {n:76, text:'Which command correctly configures a standard IPv4 static route to network 192.168.2.0/24 via next-hop 10.0.0.2?', opts:['ip route 10.0.0.2 255.255.255.0 192.168.2.0','ip route 192.168.2.0 255.255.255.0 10.0.0.2','ip static 192.168.2.0 /24 10.0.0.2','route 192.168.2.0 0.0.0.0 10.0.0.2']},
+  {n:77, text:'What is the correct syntax for an IPv4 default static route?', opts:['ip route 255.255.255.255 255.255.255.255 10.1.1.1','ip route 0.0.0.0 0.0.0.0 [next-hop/exit-interface]','ip default-gateway 0.0.0.0','ip route 10.0.0.0 255.0.0.0 any']},
+  {n:78, text:'What is the primary purpose of a floating static route?', opts:['To dynamically learn routes from other routers','To load balance traffic across multiple links equally','To act as a backup route if the primary routing path fails','To summarize multiple network routes into one']},
+  {n:79, text:'How do you configure a floating static route?', opts:['By configuring a static route with a higher administrative distance than the primary route','By configuring a static route with a lower administrative distance than the primary route','By assigning the route a metric of zero','By using the \'floating\' keyword in the configuration']},
+  {n:80, text:'A network administrator is configuring an IPv6 static route. What command should be used?', opts:['ip route v6','ipv6 route','route ipv6','ip static ipv6']},
+  {n:81, text:'What is an IPv4 host route?', opts:['A route to a default gateway','A route to a specific destination device with a /32 subnet mask (255.255.255.255)','A route that summarizes multiple subnets','A dynamically learned route to an ISP']},
+  {n:82, text:'When an IPv6 static route uses a link-local address as the next-hop, what must also be specified in the configuration?', opts:['The MAC address of the next hop','The exit interface type and number','A floating administrative distance','A metric of 1']},
+  {n:83, text:'Which of the following routes will the router prefer if both exist in the routing table for the destination 10.1.1.5?', opts:['10.1.1.0/24 (Static Route)','10.1.1.0/26 (OSPF Route)','10.1.1.0/28 (EIGRP Route)','10.1.1.5/32 (Host Route)']},
+  {n:84, text:'What happens when a router uses an exit-interface instead of a next-hop IP in a static route on a multi-access network (like Ethernet)?', opts:['The router will drop the packet.','The router acts as a proxy ARP server.','The router will have to send an ARP request for the destination IP address of the packet, not the next-hop router.','The packet is flooded out all interfaces.']},
+  {n:85, text:'Which command creates a backup route to OSPF (AD 110) pointing to next-hop 192.168.1.1?', opts:['ip route 0.0.0.0 0.0.0.0 192.168.1.1','ip route 10.0.0.0 255.255.255.0 192.168.1.1 50','ip route 10.0.0.0 255.255.255.0 192.168.1.1 115','ip route 10.0.0.0 255.255.255.0 192.168.1.1 backup']},
+  {n:86, text:'When configuring an IPv6 default route, which prefix and prefix-length are used?', opts:['::/0','0.0.0.0/0','::1/128','FE80::/10']},
+  {n:87, text:'What is a summary static route?', opts:['A route that backs up a dynamic protocol','A single static route that replaces multiple specific static routes to reduce the size of the routing table','A route assigned to a loopback interface','A route that points to the ISP']},
+  {n:88, text:'If an administrator issues the command ip route 172.16.0.0 255.255.0.0 S0/0/0, what type of static route is this?', opts:['Next-hop specified static route','Directly connected static route (exit-interface only)','Fully specified static route','Floating static route']},
+  {n:89, text:'A fully specified static route includes which of the following?', opts:['Both the exit interface and the next-hop IP address','Only the exit interface','Only the next-hop IP address','The MAC address of the destination']},
+  {n:90, text:'Why would a network administrator choose to use static routing instead of dynamic routing?', opts:['Static routing automatically adapts to network topology changes.','Static routing is more secure and uses fewer router resources (CPU/Memory).','Static routing is easier to configure on large, complex networks.','Static routing requires no manual configuration.']},
+  /* ── MODULE 16: Troubleshoot Static and Default Routes ── */
+  {n:91, text:'When a packet arrives at a router\'s interface, what is the first step the router takes regarding the packet header?', opts:['It changes the destination IP address','It drops the packet if it\'s UDP','It decapsulates the Layer 2 frame to read the Layer 3 IP packet','It encrypts the payload']},
+  {n:92, text:'After finding a matching route in the routing table, what must the router do before sending the packet out a directly connected Ethernet interface?', opts:['Compress the IP packet','Search the ARP table for the Layer 2 MAC address of the next-hop or destination IP','Request a new IP address via DHCP','Check the routing table again']},
+  {n:93, text:'If the router searches the ARP table and finds no entry for the destination IP, what action does it take?', opts:['Drops the packet immediately','Floods the IP packet out all ports','Sends an ARP request out the Ethernet interface','Returns the packet to the sender']},
+  {n:94, text:'Which Cisco IOS command verifies the Layer 2 to Layer 3 mapping on an IPv4 network?', opts:['show ip interface brief','show arp','show ip route','show mac address-table']},
+  {n:95, text:'Which troubleshooting tool is used to test end-to-end connectivity by sending ICMP Echo Requests?', opts:['traceroute','ping','telnet','ssh']},
+  {n:96, text:'If a ping fails, which command can help identify exactly which router in the path is dropping the packet?', opts:['show ip route','traceroute','show cdp neighbors','show interfaces']},
+  {n:97, text:'An administrator configures a static route, but it does not appear in the show ip route output. What is the most likely reason?', opts:['The router has not been rebooted.','The exit interface specified in the static route is down or administratively down.','The router is waiting for an ARP reply.','Static routes are hidden by default.']},
+  {n:98, text:'Which command provides a quick status of all router interfaces, showing whether they are "up" or "down"?', opts:['show running-config','show ip interface brief','show protocols','show controllers']},
+  {n:99, text:'An administrator is troubleshooting a connection to a neighboring Cisco router. Which command provides information about the neighbor\'s device ID, local interface, and IP address without using routing protocols?', opts:['show cdp neighbors detail','show ip route','show arp','show version']},
+  {n:100,text:'When encapsulating a packet into a new frame to be sent to the next router, what does the router use as the source MAC address?', opts:['The MAC address of the original sending host','The MAC address of the destination host','The MAC address of its own exit interface','The broadcast MAC address (FF:FF:FF:FF:FF:FF)']},
+];
+
 /* ═══════════════════════════════════════
    STATE
 ═══════════════════════════════════════ */
@@ -1716,6 +1872,7 @@ let state = {
   subject: null,
   shuffle: false,
   showHints: true,
+  includePart2: true,
   questions: [],
   current: 0,
   answers: {},   // index → chosen letter
@@ -1774,6 +1931,20 @@ function selectSubject(sub) {
     state.showHints = true; // reset to default
   }
 
+  // Show Part 2 toggle only for SRWE subject
+  const part2Row = document.getElementById('cfg-part2');
+  const part2Toggle = document.getElementById('toggle-part2');
+  if (sub.id === 'srwe') {
+    part2Row.style.display = 'flex';
+    state.includePart2 = true;
+    part2Toggle.classList.add('on');
+    part2Row.classList.add('active');
+    document.getElementById('cfg-sub').textContent = `${sub.title} — 100 questions`;
+  } else {
+    part2Row.style.display = 'none';
+    state.includePart2 = true;
+  }
+
   goTo('screen-config');
 }
 
@@ -1796,6 +1967,16 @@ function toggleHints() {
   opt.classList.toggle('active', state.showHints);
 }
 
+function togglePart2() {
+  state.includePart2 = !state.includePart2;
+  const t = document.getElementById('toggle-part2');
+  const opt = document.getElementById('cfg-part2');
+  t.classList.toggle('on', state.includePart2);
+  opt.classList.toggle('active', state.includePart2);
+  const count = state.includePart2 ? 100 : 75;
+  document.getElementById('cfg-sub').textContent = `${state.subject.title} — ${count} questions`;
+}
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -1813,11 +1994,17 @@ function startExam() {
     BLOOM_MAP = BLOOM_MAP_DS1; ANSWER_KEY = ANSWER_KEY_DS1; SECTION_LABELS = SECTION_LABELS_DS1;
   } else if (id === 'ias') {
     BLOOM_MAP = BLOOM_MAP_IAS; ANSWER_KEY = ANSWER_KEY_IAS; SECTION_LABELS = SECTION_LABELS_IAS;
+  } else if (id === 'srwe') {
+    BLOOM_MAP = BLOOM_MAP_SRWE; ANSWER_KEY = ANSWER_KEY_SRWE; SECTION_LABELS = SECTION_LABELS_SRWE;
   } else {
     BLOOM_MAP = BLOOM_MAP_PT; ANSWER_KEY = ANSWER_KEY_PT; SECTION_LABELS = SECTION_LABELS_PT;
   }
-  const poolMap = { fds: ALL_QUESTIONS, ds1: ALL_QUESTIONS_DS1, ias: ALL_QUESTIONS_IAS, pt: ALL_QUESTIONS_PT };
-  state.questions = state.shuffle ? shuffle(poolMap[id]) : [...poolMap[id]];
+  const poolMap = { fds: ALL_QUESTIONS, ds1: ALL_QUESTIONS_DS1, ias: ALL_QUESTIONS_IAS, pt: ALL_QUESTIONS_PT, srwe: ALL_QUESTIONS_SRWE };
+  let pool = [...poolMap[id]];
+  if (id === 'srwe' && !state.includePart2) {
+    pool = pool.filter(q => q.n <= 75);
+  }
+  state.questions = state.shuffle ? shuffle(pool) : pool;
   state.current = 0;
   state.answers = {};
   state.correctCount = 0;
@@ -2092,7 +2279,7 @@ function buildSummary() {
   const g = getGrade(pct);
 
   // Section breakdown
-  const sectionLabel = state.subject.id === 'pt' ? 'Performance by Section' : 'Performance by Bloom\'s Level';
+  const sectionLabel = (state.subject.id === 'pt' || state.subject.id === 'srwe') ? 'Performance by Section' : 'Performance by Bloom\'s Level';
   let bloomHTML = '';
   Object.entries(BLOOM_MAP).forEach(([level, nums]) => {
     const levelQs = state.questions.filter(q => nums.includes(q.n));
