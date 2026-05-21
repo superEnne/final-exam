@@ -1541,6 +1541,15 @@ const SUBJECTS = [
     chapters: 'Modules 10–16',
     items: 100,
     bloom: 7,
+  },
+  {
+    id: 'ge',
+    code: 'GE ELECT',
+    title: 'Environmental Science',
+    desc: 'Covers Human Population, Industrialization & Urbanization, Energy & the Environment, and Air Pollution. Includes Multiple Choice, Modified True or False, Identification, and Enumeration.',
+    chapters: 'Human Population · Industrialization · Energy · Air Pollution',
+    items: 80,
+    bloom: 4,
   }
 ];
 
@@ -1984,6 +1993,161 @@ const SECTION_LABELS_IAS = {
 const SECTION_LABELS_PT = {
   'System Admin':'System Admin', 'Virtualization':'Virtualization', 'Client-Server':'Client-Server'
 };
+
+/* ══════════════════════════════════════
+   GE ELECT — ENVIRONMENTAL SCIENCE DATA
+══════════════════════════════════════ */
+const BLOOM_MAP_GE = {
+  'Multiple Choice':         [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+  'Modified True or False':  [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40],
+  'Identification':          [41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60],
+  'Enumeration':             [61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80],
+};
+const SECTION_LABELS_GE = {
+  'Multiple Choice':'Multiple Choice', 'Modified True or False':'Modified True or False',
+  'Identification':'Identification', 'Enumeration':'Enumeration'
+};
+const ANSWER_KEY_GE = {
+  1:'B',2:'C',3:'C',4:'C',5:'B',6:'B',7:'B',8:'C',9:'C',10:'C',
+  11:'C',12:'C',13:'B',14:'B',15:'C',16:'D',17:'B',18:'D',19:'A',20:'C',
+  21:'A',22:'B',23:'C',24:'A',25:'A',26:'C',27:'A',28:'B',29:'A',30:'A',
+  31:'B',32:'B',33:'A',34:'A',35:'A',36:'A',37:'B',38:'A',39:'A',40:'A',
+};
+const ANSWER_KEY_GE_ID = {
+  41:'Environmental Science', 42:'Prevalence', 43:'Rate of Natural Increase',
+  44:'Hunters and Gatherers', 45:'Life expectancy at birth', 46:'Industrial Revolution',
+  47:'Urbanization', 48:'Destruction of Habitats', 49:'Coal', 50:'Water',
+  51:'Agricultural technology', 52:'Forest and grassland ecosystems', 53:'Transmission lines',
+  54:'Visual pollution', 55:'Planetary scale', 56:'Exosphere', 57:'Argon',
+  58:'Thermosphere', 59:'Formaldehyde', 60:'Solar-produced hydrogen',
+  61:'Helium', 62:'Neon', 63:'Methane',
+  64:'Steam', 65:'Electricity', 66:'Coal',
+  67:'Pigeons', 68:'Sparrows', 69:'Rats', 70:'Mice',
+  71:'Wind', 72:'Geothermal', 73:'Solar-produced hydrogen',
+  74:'Particulates', 75:'Radon', 76:'Formaldehyde',
+  77:'Infant mortality rate', 78:'Life expectancy at birth',
+  79:'Rate of natural increase', 80:'Case fatality rate',
+};
+const GE_ALIASES = {
+  43:['RNI','Rate of Natural Increase (RNI)'],
+  45:['Life expectancy'],
+  48:['Habitat Destruction','Habitat destruction','Destruction of habitat'],
+  51:['Agriculture','Agricultural'],
+  52:['Forests and grasslands','Forest and grassland'],
+  55:['Biophysical processes','Planetary scale processes','Biophysical'],
+  60:['Solar hydrogen','Solar produced hydrogen','Hydrogen (solar)'],
+  61:['Neon','Methane','Krypton','Hydrogen'],
+  62:['Helium','Methane','Krypton','Hydrogen'],
+  63:['Helium','Neon','Krypton','Hydrogen'],
+  64:['Electricity','Coal'],
+  65:['Steam','Coal'],
+  66:['Steam','Electricity'],
+  67:['Sparrows','Rats','Mice','Flies','Mosquitoes'],
+  68:['Pigeons','Rats','Mice','Flies','Mosquitoes'],
+  69:['Pigeons','Sparrows','Mice','Flies','Mosquitoes'],
+  70:['Pigeons','Sparrows','Rats','Flies','Mosquitoes'],
+  71:['Geothermal','Solar-produced hydrogen','Solar produced hydrogen','Wind energy','Geothermal energy'],
+  72:['Wind','Solar-produced hydrogen','Solar produced hydrogen','Wind energy','Geothermal energy'],
+  73:['Wind','Geothermal','Solar hydrogen','Wind energy','Geothermal energy'],
+  74:['Radon','Formaldehyde','Particulate matter'],
+  75:['Particulates','Formaldehyde','Particulate matter'],
+  76:['Particulates','Radon','Particulate matter'],
+  77:['Life expectancy at birth','Rate of natural increase','RNI','Case fatality rate','Prevalence','Doubling time','Life expectancy'],
+  78:['Infant mortality rate','Rate of natural increase','RNI','Case fatality rate','Prevalence','Doubling time'],
+  79:['Infant mortality rate','Life expectancy at birth','Case fatality rate','Prevalence','Doubling time','RNI','Rate of Natural Increase (RNI)'],
+  80:['Infant mortality rate','Life expectancy at birth','Rate of natural increase','RNI','Prevalence','Doubling time','Case Fatality Rate'],
+};
+
+const ALL_QUESTIONS_GE = [
+  /* ── PART I: MULTIPLE CHOICE ── */
+  {n:1, text:'What was the estimated population density during the Hunters and Gatherers stage?', opts:['1 person per 10–20 km²','1 person per 130–260 km²','100 people per km²','1,000 people per km²']},
+  {n:2, text:'How is the Rate of Natural Increase (RNI) calculated?', opts:['Birth rate multiplied by death rate','Death rate minus birth rate','Birth rate minus death rate','Total population divided by land area']},
+  {n:3, text:'Which of the following defines "Life expectancy at birth"?', opts:['The percentage of people who die once they contract a disease','The number of years it takes for a population to double','The average number of years a newborn infant can expect to live given current mortality rates','The annual number of deaths of infants under age 1']},
+  {n:4, text:'What is the estimated total human population size when stabilization is expected around the year 2100?', opts:['7 billion','9 billion','10.5 billion','12 billion']},
+  {n:5, text:'It only took about how many years for the human population to grow from 6 billion to 7 billion people?', opts:['10 years','12 years','25 years','50 years']},
+  {n:6, text:'The Industrial Revolution marked a change in manufacturing methods from the Domestic System to the __________.', opts:['Agricultural System','Factory System','Feudal System','Automated System']},
+  {n:7, text:'Which of the following is an effect of the Industrial Revolution?', opts:['Rural agriculture increased','Rapid urbanization resulted in dirty, crowded cities','People moved from cities to rural areas','The spread of disease decreased']},
+  {n:8, text:'How does urbanization primarily impact water flow through streams?', opts:['It creates lower, slower peak flows','It completely dries up stream channels','It causes higher, faster peak flows leading to flooding','It purifies the water flowing through the streams']},
+  {n:9, text:'Which of the following transportation methods replaced animals and watercraft during the Industrial Revolution?', opts:['Airplanes','Bicycles','Trains and automobiles','Submarines']},
+  {n:10, text:'While urbanization destroys native habitats, it also creates new habitats for "pest" species. Which of the following is considered an urban pest?', opts:['Eagles','Deer','Pigeons','Monarch butterflies']},
+  {n:11, text:'Humanity has entered a global phase of development risking the limits of biophysical processes due to the substantial consumption of what?', opts:['Solar energy','Wind energy','Fossil and nuclear fuels','Geothermal power']},
+  {n:12, text:'About how many years ago did agricultural technology begin to displace hunter-gatherer societies?', opts:['2,000 years ago','5,000 years ago','10,000 years ago','50,000 years ago']},
+  {n:13, text:'Which of the following is considered a PRO (advantage) of wind energy?', opts:['It produces noise pollution','It uses land efficiently (e.g., farming can occur under turbines)','It requires costly transmission lines','It disrupts scenic landscapes']},
+  {n:14, text:'Which of the following is a CON (disadvantage) of wind energy?', opts:['It emits greenhouse gases','It is limited to locations where wind frequently occurs','It costs a lot to operate and maintain daily','It depletes the wind resource over time']},
+  {n:15, text:'As the world population increased, natural forest and grassland ecosystems were permanently replaced by what?', opts:['Oceans','Deserts','Crop and pasture land','Ice caps']},
+  {n:16, text:'What is the most abundant gas in the Earth\'s dry atmosphere?', opts:['Oxygen','Carbon Dioxide','Argon','Nitrogen']},
+  {n:17, text:'What percentage of the Earth\'s atmosphere is Oxygen?', opts:['78%','21%','0.96%','0.04%']},
+  {n:18, text:'The layer of the atmosphere located 800 to 3000 km above Earth, where spaceships and satellites orbit, is the:', opts:['Troposphere','Mesosphere','Thermosphere','Exosphere']},
+  {n:19, text:'Which of the following is proposed as a solution to INDOOR air pollution in developing countries?', opts:['Distribute cheap and efficient cookstoves','Build taller smokestacks','Rely more on natural gas for city grids','Stop building wind turbines']},
+  {n:20, text:'Which layer of the atmosphere experiences extreme temperatures from 86.5 to 1200°C and is where Auroras occur?', opts:['Stratosphere','Mesosphere','Thermosphere','Exosphere']},
+
+  /* ── PART II: MODIFIED TRUE OR FALSE ── */
+  {n:21, text:'Is this statement TRUE? If false, select the correct replacement for the underlined word/phrase.<br><br>"<u>Doubling time</u> is the number of years it takes for a population to double, assuming a constant rate of natural increase."', opts:['TRUE','Tripling time','Natural growth rate','Carrying capacity']},
+  {n:22, text:'Is this statement TRUE? If false, select the correct replacement for the underlined term.<br><br>"The annual number of deaths of infants under age 1 per 1,000 live births is called the <u>case fatality rate</u>."', opts:['TRUE','Infant mortality rate','Prevalence rate','Doubling time']},
+  {n:23, text:'Is this statement TRUE? If false, select the correct replacement for the underlined term.<br><br>"In demography, <u>prevalence</u> is the percentage of people who die once they contract a disease."', opts:['TRUE','Infant mortality rate','Case fatality rate','Rate of natural increase']},
+  {n:24, text:'Is this statement TRUE? If false, select the correct replacement for the underlined figure.<br><br>"We are projected to hit <u>9 billion</u> people near the year 2050."', opts:['TRUE','8 billion','10 billion','12 billion']},
+  {n:25, text:'Is this statement TRUE? If false, select the correct replacement for the underlined term.<br><br>"<u>Gross National Product (GNP) per capita</u> includes the value of all domestic and foreign output."', opts:['TRUE','Gross Domestic Product (GDP) per capita','Net National Income per capita','Purchasing Power Parity']},
+  {n:26, text:'Is this statement TRUE? If false, select the correct replacement for the underlined word.<br><br>"The Industrial Revolution saw a shift where rural agriculture <u>increased</u> while urban manufacturing decreased."', opts:['TRUE','Remained stable','Declined / Decreased','Doubled']},
+  {n:27, text:'Is this statement TRUE? If false, select the correct replacement for the underlined phrase.<br><br>"During the Industrial Revolution, energy sources like wind, water, and human labor were replaced by <u>coal and steam</u>."', opts:['TRUE','Solar and nuclear energy','Oil and electricity','Gas and hydraulic power']},
+  {n:28, text:'Is this statement TRUE? If false, select the correct replacement for the underlined term.<br><br>"New habitats created by cities usually push out all <u>non-native</u> species, allowing only native species to thrive."', opts:['TRUE','Pest / Non-native','Invasive','Migratory']},
+  {n:29, text:'Is this statement TRUE? If false, select the correct replacement for the underlined phrase.<br><br>"Many <u>working class women</u> joined the workforce to support their families during the Industrial Revolution."', opts:['TRUE','Upper class women only','Working class children only','Working class men only']},
+  {n:30, text:'Is this statement TRUE? If false, select the correct replacement for the underlined phrase.<br><br>"Urbanization has <u>completely eradicated</u> many bat colonies in caves, but has provided sites such as bridges for them to nest."', opts:['TRUE','Partially increased','Completely restored','Temporarily displaced']},
+  {n:31, text:'Is this statement TRUE? If false, select the correct replacement for the underlined term.<br><br>"Wind energy is considered a <u>non-renewable</u> energy source."', opts:['TRUE','Renewable','Fossil fuel','Nuclear']},
+  {n:32, text:'Is this statement TRUE? If false, select the correct replacement for the underlined word.<br><br>"A major disadvantage of wind turbines is that they are extremely <u>quiet</u>."', opts:['TRUE','Noisy','Efficient','Costly']},
+  {n:33, text:'Is this statement TRUE? If false, select the correct replacement for the underlined phrase.<br><br>"Modern societies depend on physical infrastructures (food, water, shelter) that are operated primarily by consuming <u>fossil and nuclear fuels</u>."', opts:['TRUE','Solar and wind energy only','Geothermal and tidal energy','Renewable energy exclusively']},
+  {n:34, text:'Is this statement TRUE? If false, select the correct replacement for the underlined word.<br><br>"Wind turbines can be extremely <u>expensive</u> to install."', opts:['TRUE','Inexpensive','Moderately priced','Subsidized']},
+  {n:35, text:'Is this statement TRUE? If false, select the correct replacement for the underlined phrase.<br><br>"Because they need to be built high to capture wind, turbines can disrupt <u>otherwise scenic landscapes</u>."', opts:['TRUE','Only offshore landscapes','Only urban landscapes','Only industrial zones']},
+  {n:36, text:'Is this statement TRUE? If false, select the correct replacement for the underlined word.<br><br>"Air is the <u>invisible</u> mixture of gases that surrounds Earth."', opts:['TRUE','Visible','Tangible','Solid']},
+  {n:37, text:'Is this statement TRUE? If false, select the correct replacement for the underlined figure.<br><br>"Carbon dioxide makes up <u>0.96%</u> of the dry composition of the atmosphere."', opts:['TRUE','0.04%','21%','78%']},
+  {n:38, text:'Is this statement TRUE? If false, select the correct replacement for the underlined phrase.<br><br>"<u>Developing simple and cheap tests</u> for pollutants such as particulates, radon, and formaldehyde is a solution to indoor air pollution."', opts:['TRUE','Developing complex and expensive tests','Eliminating all indoor activities','Installing industrial scrubbers only']},
+  {n:39, text:'Is this statement TRUE? If false, select the correct replacement for the underlined number.<br><br>"The Earth\'s atmosphere is layered into <u>four</u> distinct zones of temperature due to the differential absorption of solar energy."', opts:['TRUE','Three','Five','Two']},
+  {n:40, text:'Is this statement TRUE? If false, select the correct replacement for the underlined layer name.<br><br>"The <u>Mesosphere</u> is located 40–50 to 80–90 km above the Earth\'s surface and experiences temperatures between −2.5 to −86.5°C."', opts:['TRUE','Stratosphere','Thermosphere','Exosphere']},
+
+  /* ── PART III: IDENTIFICATION ── */
+  {n:41, type:'id', text:'An interdisciplinary field of research that seeks to understand the natural world and our relationship to it.', hint:'Two words starting with "E" — the name of this subject!'},
+  {n:42, type:'id', text:'The number of people afflicted with a particular disease at a particular time.', hint:'One word; a statistical measure of disease frequency at a point in time.'},
+  {n:43, type:'id', text:'The birth rate minus the death rate, implying an annual rate of population growth (excluding migration).', hint:'Three words; often abbreviated as RNI.'},
+  {n:44, type:'id', text:'The historical stage of human population growth occurring before the beginning of agriculture.', hint:'Three words; describes the earliest human lifestyle.'},
+  {n:45, type:'id', text:'The average number of years a newborn infant can expect to live given current mortality rates.', hint:'Four words; a key demographic health indicator.'},
+  {n:46, type:'id', text:'The historical era characterized by a change in manufacturing methods from the Domestic System to the Factory System.', hint:'Two words; a major turning point in human history.'},
+  {n:47, type:'id', text:'The demographic phenomenon characterized by the rapid growth of cities, often resulting initially in dirty, crowded living conditions.', hint:'One word; the process of becoming city-based.'},
+  {n:48, type:'id', text:'The complete eradication of native living spaces, pushing native species out of cities — an outcome of urbanization.', hint:'Three words; what urbanization does to natural habitats.'},
+  {n:49, type:'id', text:'The specific type of fuel (alongside steam) that replaced wind, water, human, and animal labor during the Industrial Revolution.', hint:'One word; a black fossil fuel mined from the earth.'},
+  {n:50, type:'id', text:'Higher, faster peak flows of this natural occurrence change stream channels and cause major flooding problems in growing cities. (What is flowing?)', hint:'One word; what runs through rivers and streams.'},
+  {n:51, type:'id', text:'The specific type of technology that began displacing hunter-gatherer societies about 10,000 years ago.', hint:'Two words; relates to farming and cultivating crops.'},
+  {n:52, type:'id', text:'Natural ecosystems that were permanently replaced by crop and pasture land as the world population increased.', hint:'Four words; two types of natural ecosystems joined by "and".'},
+  {n:53, type:'id', text:'The costly and disruptive infrastructure required to transport wind energy from where it is generated to where it is needed.', hint:'Two words; the cables and lines that carry electricity.'},
+  {n:54, type:'id', text:'The type of pollution (aside from noise) produced by wind turbines because they disrupt scenic landscapes.', hint:'Two words; pollution that affects what we can see.'},
+  {n:55, type:'id', text:'The phase of global development humanity has entered, where anthropogenic pressures risk reaching the hardwired limits of what scale/processes?', hint:'Two words; think of Earth\'s global natural systems.'},
+  {n:56, type:'id', text:'The layer of the atmosphere closest to space (800 to 3000 km), where spaceships and satellites orbit.', hint:'One word; the outermost atmospheric layer.'},
+  {n:57, type:'id', text:'The trace gas that makes up the majority of the "Other Gases" (0.96%) in Earth\'s atmosphere.', hint:'One word; a noble gas, symbol Ar.'},
+  {n:58, type:'id', text:'The layer of the atmosphere characterized by Auroras and temperatures ranging from 86.5 to 1200°C.', hint:'One word; contains "thermo" — relating to heat.'},
+  {n:59, type:'id', text:'A highly dangerous indoor pollutant (starting with "f") for which simple and cheap tests should be developed.', hint:'One word; starts with "F", a chemical in building materials and furniture.'},
+  {n:60, type:'id', text:'The specific type of hydrogen mentioned as a lower-polluting, renewable energy alternative (produced via solar).', hint:'Two words with a hyphen; solar + hydrogen.'},
+
+  /* ── PART IV: ENUMERATION ── */
+  {n:61, type:'enum', text:'Give three (3) trace gases found in the Earth\'s atmosphere (excluding Argon and CO₂). — Name one (Item 1 of 3).', hint:'Examples: noble gases like Helium, Neon, Krypton, or greenhouse gases like Methane or Hydrogen.'},
+  {n:62, type:'enum', text:'Give three (3) trace gases found in the Earth\'s atmosphere (excluding Argon and CO₂). — Name another one (Item 2 of 3).', hint:'Another valid trace gas — any from the list: Helium, Neon, Krypton, Methane, Hydrogen.'},
+  {n:63, type:'enum', text:'Give three (3) trace gases found in the Earth\'s atmosphere (excluding Argon and CO₂). — Name another one (Item 3 of 3).', hint:'Third trace gas from the list: Helium, Neon, Krypton, Methane, or Hydrogen.'},
+  {n:64, type:'enum', text:'List three (3) new sources of power developed during the Industrial Revolution. — Name one (Item 1 of 3).', hint:'Think of what powered factories: Steam, Electricity, or Coal.'},
+  {n:65, type:'enum', text:'List three (3) new sources of power developed during the Industrial Revolution. — Name another one (Item 2 of 3).', hint:'Another power source from the Industrial Revolution: Steam, Electricity, or Coal.'},
+  {n:66, type:'enum', text:'List three (3) new sources of power developed during the Industrial Revolution. — Name another one (Item 3 of 3).', hint:'Third power source: Steam, Electricity, or Coal.'},
+  {n:67, type:'enum', text:'Enumerate four (4) "pest" species that easily thrive in habitats created by urbanization. — Name one (Item 1 of 4).', hint:'Think: Pigeons, Sparrows, Rats, Mice, Flies, or Mosquitoes.'},
+  {n:68, type:'enum', text:'Enumerate four (4) "pest" species that easily thrive in habitats created by urbanization. — Name another one (Item 2 of 4).', hint:'Another urban pest from: Pigeons, Sparrows, Rats, Mice, Flies, Mosquitoes.'},
+  {n:69, type:'enum', text:'Enumerate four (4) "pest" species that easily thrive in habitats created by urbanization. — Name another one (Item 3 of 4).', hint:'Third urban pest from: Pigeons, Sparrows, Rats, Mice, Flies, Mosquitoes.'},
+  {n:70, type:'enum', text:'Enumerate four (4) "pest" species that easily thrive in habitats created by urbanization. — Name another one (Item 4 of 4).', hint:'Fourth urban pest from: Pigeons, Sparrows, Rats, Mice, Flies, Mosquitoes.'},
+  {n:71, type:'enum', text:'Give three (3) specific examples of renewable energy sources (aside from solar cells). — Name one (Item 1 of 3).', hint:'Think: Wind, Geothermal, or Solar-produced hydrogen.'},
+  {n:72, type:'enum', text:'Give three (3) specific examples of renewable energy sources (aside from solar cells). — Name another one (Item 2 of 3).', hint:'Another renewable: Wind, Geothermal, or Solar-produced hydrogen.'},
+  {n:73, type:'enum', text:'Give three (3) specific examples of renewable energy sources (aside from solar cells). — Name another one (Item 3 of 3).', hint:'Third renewable energy source from the modules.'},
+  {n:74, type:'enum', text:'List three (3) specific indoor air pollutants for which simple and cheap tests should be developed. — Name one (Item 1 of 3).', hint:'From the list: Particulates, Radon, or Formaldehyde.'},
+  {n:75, type:'enum', text:'List three (3) specific indoor air pollutants for which simple and cheap tests should be developed. — Name another one (Item 2 of 3).', hint:'Another indoor pollutant: Particulates, Radon, or Formaldehyde.'},
+  {n:76, type:'enum', text:'List three (3) specific indoor air pollutants for which simple and cheap tests should be developed. — Name another one (Item 3 of 3).', hint:'Third indoor air pollutant from the list.'},
+  {n:77, type:'enum', text:'Identify four (4) demographic metrics used to measure disease, death, or population growth rates. — Name one (Item 1 of 4).', hint:'E.g., Infant mortality rate, Life expectancy at birth, RNI, Case fatality rate, Prevalence, Doubling time.'},
+  {n:78, type:'enum', text:'Identify four (4) demographic metrics used to measure disease, death, or population growth rates. — Name another one (Item 2 of 4).', hint:'Another metric: Infant mortality rate, Life expectancy, RNI, Case fatality rate, Prevalence, Doubling time.'},
+  {n:79, type:'enum', text:'Identify four (4) demographic metrics used to measure disease, death, or population growth rates. — Name another one (Item 3 of 4).', hint:'Third demographic metric from the list.'},
+  {n:80, type:'enum', text:'Identify four (4) demographic metrics used to measure disease, death, or population growth rates. — Name another one (Item 4 of 4).', hint:'Fourth demographic metric from the list.'},
+];
+
 let SECTION_LABELS = SECTION_LABELS_FDS;
 let BLOOM_MAP = BLOOM_MAP_FDS;
 let ANSWER_KEY = ANSWER_KEY_FDS;
@@ -2245,6 +2409,10 @@ let state = {
   shownTables: new Set(),
 };
 
+// Active subject's ID/Enum answer key and aliases (set in startExam)
+let CURRENT_ID_KEY = ANSWER_KEY_PT;
+let CURRENT_ALIASES = PT_ALIASES;
+
 /* ═══════════════════════════════════════
    NAVIGATION
 ═══════════════════════════════════════ */
@@ -2283,10 +2451,10 @@ function selectSubject(sub) {
   document.getElementById('cfg-title').innerHTML = `Exam <em>Settings</em>`;
   document.getElementById('cfg-sub').textContent = `${sub.title} — ${sub.items} questions`;
 
-  // Show hints toggle only for PT subject
+  // Show hints toggle only for PT and GE subjects (which have id/enum questions)
   const hintsRow = document.getElementById('cfg-hints');
   const hintsToggle = document.getElementById('toggle-hints');
-  if (sub.id === 'pt') {
+  if (sub.id === 'pt' || sub.id === 'ge') {
     hintsRow.style.display = 'flex';
     state.showHints = true;
     hintsToggle.classList.add('on');
@@ -2355,16 +2523,24 @@ function startExam() {
   const id = state.subject.id;
   if (id === 'fds') {
     BLOOM_MAP = BLOOM_MAP_FDS; ANSWER_KEY = ANSWER_KEY_FDS; SECTION_LABELS = SECTION_LABELS_FDS;
+    CURRENT_ID_KEY = null; CURRENT_ALIASES = {};
   } else if (id === 'ds1') {
     BLOOM_MAP = BLOOM_MAP_DS1; ANSWER_KEY = ANSWER_KEY_DS1; SECTION_LABELS = SECTION_LABELS_DS1;
+    CURRENT_ID_KEY = null; CURRENT_ALIASES = {};
   } else if (id === 'ias') {
     BLOOM_MAP = BLOOM_MAP_IAS; ANSWER_KEY = ANSWER_KEY_IAS; SECTION_LABELS = SECTION_LABELS_IAS;
+    CURRENT_ID_KEY = null; CURRENT_ALIASES = {};
   } else if (id === 'srwe') {
     BLOOM_MAP = BLOOM_MAP_SRWE; ANSWER_KEY = ANSWER_KEY_SRWE; SECTION_LABELS = SECTION_LABELS_SRWE;
+    CURRENT_ID_KEY = null; CURRENT_ALIASES = {};
+  } else if (id === 'ge') {
+    BLOOM_MAP = BLOOM_MAP_GE; ANSWER_KEY = ANSWER_KEY_GE; SECTION_LABELS = SECTION_LABELS_GE;
+    CURRENT_ID_KEY = ANSWER_KEY_GE_ID; CURRENT_ALIASES = GE_ALIASES;
   } else {
     BLOOM_MAP = BLOOM_MAP_PT; ANSWER_KEY = ANSWER_KEY_PT; SECTION_LABELS = SECTION_LABELS_PT;
+    CURRENT_ID_KEY = ANSWER_KEY_PT; CURRENT_ALIASES = PT_ALIASES;
   }
-  const poolMap = { fds: ALL_QUESTIONS, ds1: ALL_QUESTIONS_DS1, ias: ALL_QUESTIONS_IAS, pt: ALL_QUESTIONS_PT, srwe: ALL_QUESTIONS_SRWE };
+  const poolMap = { fds: ALL_QUESTIONS, ds1: ALL_QUESTIONS_DS1, ias: ALL_QUESTIONS_IAS, pt: ALL_QUESTIONS_PT, srwe: ALL_QUESTIONS_SRWE, ge: ALL_QUESTIONS_GE };
   let pool = [...poolMap[id]];
   if (id === 'srwe' && !state.includePart2) {
     pool = pool.filter(q => q.n <= 75);
@@ -2401,11 +2577,12 @@ function ptNormalize(s) {
   return String(s).toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();
 }
 function ptCheckAnswer(n, userInput) {
+  if (!CURRENT_ID_KEY || CURRENT_ID_KEY[n] === undefined) return false;
   const norm = ptNormalize(userInput);
-  const correct = ptNormalize(ANSWER_KEY_PT[n]);
+  const correct = ptNormalize(CURRENT_ID_KEY[n]);
   if (norm === correct) return true;
   // check aliases
-  const aliases = (PT_ALIASES[n] || []).map(ptNormalize);
+  const aliases = (CURRENT_ALIASES[n] || []).map(ptNormalize);
   return aliases.includes(norm);
 }
 
@@ -2425,7 +2602,7 @@ function renderCurrentQuestion() {
   const alreadyAnswered = state.answers[idx] !== undefined;
   const chosen = state.answers[idx];
   const correct = ANSWER_KEY[q.n];
-  const correctDisplay = ANSWER_KEY_PT ? ANSWER_KEY_PT[q.n] : correct; // hoisted — used in feedback for id/enum
+  const correctDisplay = CURRENT_ID_KEY ? CURRENT_ID_KEY[q.n] : correct;
   const isCorrect = q.type === 'mc' || !q.type
     ? chosen === correct
     : ptCheckAnswer(q.n, chosen || '');
